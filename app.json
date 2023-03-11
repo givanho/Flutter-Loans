@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Flutter Loans",
+    "slug": "Flutter_Loans",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splagsh.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#01566F"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 1
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.awesome.flutterloans"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "63e98119-26df-42af-ab58-bbbb587ac5a0"
+      }
+    }
+  }
+}
