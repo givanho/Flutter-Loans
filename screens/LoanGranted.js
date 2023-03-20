@@ -1,11 +1,12 @@
 import { StyleSheet, View, Text,BackHandler, TouchableOpacity, 
-Image,} from 'react-native'
+Image, ScrollView} from 'react-native'
 import React , {useState,} from 'react'
 import 'react-native-config';
 
 import {PayWithFlutterwave} from 'flutterwave-react-native';
 import {UserAuth} from "../contest"
 import {flutter} from "@env"
+import {vw, vh} from './MyDimensions'
 
 
 
@@ -46,16 +47,13 @@ const handleOnRedirect = (data) => {
 
 
     const { bank, account, raiden, range,
-        month,
-        duration } = params;
-       
-      console.log(raiden)
-      console.log(range)
-      console.log(month)
-      console.log(duration)
-    const totalSum = range + duration
+        month,bvn,
+        interest } = params;
+      
+    const totalSum = range + interest
 
   return (
+<ScrollView >
     <View style={styles.container}>
   
 
@@ -63,11 +61,11 @@ const handleOnRedirect = (data) => {
 
       <Text style={styles.textHeadingt}>Bind Your Card</Text>
           <Text style={styles.textParagraph}>You might be charged a service fee of 50 Naira</Text>
-          <Text style={styles.textParagraph}>We will not automatically debit you </Text>
+          <Text style={styles.textParagraph}>We will not automatically debit you. </Text>
         <View>
           
                    <Image  source={require('../assets/loansummary/Walleta.gif')}
-          style={{ width: 220, height: 220 }} />
+          style={{ width: 0.3*vh, height: 0.3*vh }} />
          
         </View>
          
@@ -77,7 +75,7 @@ const handleOnRedirect = (data) => {
        <Text style={styles.textHeadingb}>{totalSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text></Text>
            </View>
 
-       <View style={{flexDirection:'row', justifyContent:'space-between',width:'85%', alignItems:'center',flexGrow:0}}>
+       <View style={{flexDirection:'row', justifyContent:'space-between',width:'100%', alignItems:'center',flexGrow:0}}>
            <View>
 
            <View>
@@ -90,7 +88,7 @@ const handleOnRedirect = (data) => {
            </View> 
            <View>
             <Text style={styles.textParagraph}>Bank:</Text>
-            <Text style={styles.textHeading}>{bank}</Text>
+            <Text style={styles.textHeadings}>{bank}</Text>
            </View>
 
            </View>
@@ -102,14 +100,14 @@ const handleOnRedirect = (data) => {
            </View>
            <View>
             <Text style={styles.textParagraph}>Loan Duration:</Text>
-            <Text style={styles.textHeading}>{month} <Text style={styles.textHeading}> Months</Text></Text>
+            <Text style={styles.textHeading}>{month} <Text style={styles.textHeading}> Month( s )</Text></Text>
            </View>
            <View>
             <Text style={styles.textParagraph}>
               Loan Interest:
             </Text>
             <Text style={styles.textHeading}>₦{' '}
-       <Text style={styles.textHeading}>{duration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text></Text>
+       <Text style={styles.textHeading}>{interest.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text></Text>
            </View>
            
            </View>
@@ -149,7 +147,9 @@ const handleOnRedirect = (data) => {
                   <Text style={{fontSize: 12,
                       color:"#F44336",
                       fontFamily:'Poppins-Regular',}}>{bind}</Text>
+                      
     </View>
+    </ScrollView>
   );
 }
 
@@ -157,11 +157,14 @@ export default LoanGranted
 
 const styles = StyleSheet.create({
   container: {
-    
+    flex:1,
     color: '#01566F',
     backgroundColor: '#F5F5F5',
     alignItems: 'center',
     justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    width:"85%"
    // top: StatusBar.currentHeight,
    
 
@@ -175,31 +178,31 @@ const styles = StyleSheet.create({
   textHeading:{
     // color:'#22292F',
     color:'#224b5f',
-    fontSize: 15, 
-    marginBottom: 5,
+    fontSize: vw * 0.045, 
+    marginBottom: vh * 0.003,
     fontFamily:'Poppins-SemiBold', 
-    marginTop:-8,
+    marginTop:-vh * 0.01,
     
   },
   
   textHeadings:{
     // color:'#22292F',
     color:'#224b5f',
-    fontSize: 15, 
-    marginBottom: 5,
+    fontSize: vw * 0.04, 
+    marginBottom: vh * 0.003,
     fontFamily:'Poppins-SemiBold', 
-    marginTop:-8,
-    width:180
+    marginTop:-vh * 0.01,
+    width:vw * 0.5
     
     
     
   },
   textHeadingt:{
-    // color:'#22292F',
-    color:'#224b5f',
-    fontSize: 19, 
-    paddingTop:10,
-    marginBottom: 5,
+     color:'#22292F',
+    //color:'#224b5f',
+    fontSize: vw * 0.050, 
+    paddingTop:0.05*vh,
+    
     fontFamily:'Poppins-SemiBold', 
     
     
@@ -210,18 +213,16 @@ const styles = StyleSheet.create({
   textHeadingb:{
     // color:'#22292F',
     color:'#224b5f',
-    fontSize: 35, 
-    narginBottom: 14,
+    fontSize: vw * 0.1, 
     fontFamily:'Poppins-SemiBold', 
-    marginTop:-8,
-  
-    
+    marginTop:-0.02*vh,
+    alignSelf: 'center',
     
     
   },
   textParagraph:{
     
-    fontSize: 12,
+    fontSize: vw * 0.035,
     fontFamily:'Poppins-Regular',
   
     color:'#515151',
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
   },
   textParagrapha:{
     
-    fontSize: 15,
+    fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
    
     color:'#515151',
@@ -259,9 +260,15 @@ const styles = StyleSheet.create({
     
   },
   submit:{
-    marginTop: 70,
-    height:50,
-    width: '87%',
+    marginTop: 0.012*vh,
+    height:0.065*vh,
+    width: '100%',
+    
+   borderRadius: vw * 0.04,    
+    backgroundColor:"#f44336",
+    alignItems: "center",
+    justifyContent:"center",
+    textAlign:"center",
 
     
    borderRadius: 18,    

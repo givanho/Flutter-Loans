@@ -6,6 +6,8 @@ import  DateTimePicker from '@react-native-community/datetimepicker'
 import { db } from '../firebase';
 import Lottie from 'lottie-react-native';
 import { collection,setDoc, addDoc, getDoc, doc } from "firebase/firestore"; 
+import {vw, vh} from './MyDimensions'
+
 
 const Profile = ({ navigation }) => {
 
@@ -195,11 +197,11 @@ return (
         <View style={{paddingRight:15}}>
            <Image 
              source={require('../assets/logout.png')}
-              style={{ width: 20, height: 20 }}/>
+              style={{ width: vw * 0.050, height: vh * 0.027 }}/>
         </View>
        <View>
         <Text style={{color:'#f44336',
-                     fontSize: 16,
+                     fontSize: vw * 0.040,
                      fontFamily:'Poppins-SemiBold'}}>Logout</Text>
        </View>
        </TouchableOpacity>
@@ -208,7 +210,7 @@ return (
                   </View>
                   <View style={styles.svg}>
           <Image  source={require('../assets/Designer1.png')}
-          style={{ width: 280, height: 270 }} />
+          style={{ width: 0.63*vw, height: 0.34*vh }} />
         </View>
 
                   
@@ -221,33 +223,35 @@ return (
       </TextInput>
 
       
-      <View style={{width:351}}>
-  <Text style={{marginTop: 24, 
-                fontSize: 16,
+      <View style={{
+                width:"85%",alignItems: "center",
+                textAlign:"center",justifyContent:'center',alignSelf:'center'}}>
+  <Text style={{marginTop: 0.019*vh, 
+                fontSize: vw * 0.045,
                 fontFamily:'Poppins-Regular',
-                marginBottom: -7,
+                marginBottom: -13,
                 color:'#515151', marginRight:"auto"}}> Gender</Text>
   <View style={styles.radio}>
     {genders.map((gender, val) => {
       return (
-        <View key={val}>
+        <View style={{flexDirection:"row",  
+        width: "48%",
+        height:0.062*vh,
+        alignItems: 'center',
+        marginTop: 0.006*vh,
+        justifyContent:"space-between"
+        }}key={val}>
           {checked == val ? (
-            <TouchableOpacity style={{flexDirection: 'row',
-                                        alignItems: 'center',  
-                                        marginTop: 5,
-                                        height:40,
-                                        width: 165,
-                                        color:'#515151',
-                                        fontFamily:'Poppins-Regular',
-                                        fontSize: 16,
-                                        borderWidth: 1,
-                                        borderRadius: 12,
-                                        borderColor: "#f44336",
-                                        backgroundColor:"#eee"
+            <TouchableOpacity style={{flexDirection:"row",  borderWidth: 1,
+            borderRadius: vw * 0.04,borderColor: "#f44336", 
+            width: "100%",
+            height:0.062*vh,
+            alignItems: 'center',
+            marginTop: 0.006*vh,
                                       }}
                               >
               <Image style={styles.img} source={require('../assets/radio-buttona.png')} />
-              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: 14, paddingLeft: 20}}>
+              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: vw * 0.04, paddingLeft: 20}}>
                 {gender}
               </Text>
             </TouchableOpacity>
@@ -260,7 +264,7 @@ return (
                                 key={val}
                                 >
               <Image style={styles.img} source={require('../assets/radio-buttonb.png')} />
-              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: 14, paddingLeft: 20}}>
+              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: vw * 0.04, paddingLeft: 20}}>
                 {gender}
               </Text>
             </TouchableOpacity>
@@ -271,29 +275,37 @@ return (
   </View>
 </View>
 
-<View>
-  <Text style={{marginTop: 24, 
-                fontSize: 16,
+<View style={{
+                width:"85%",alignItems: "center",
+                textAlign:"center",justifyContent:'center',alignSelf:'center'}}>
+  <Text style={{marginTop: vh * 0.019, 
+                fontSize: vw * 0.045,
                 fontFamily:'Poppins-Regular',
-                marginBottom: -7,
+                marginBottom: -14,
                 color:'#515151', marginRight:"auto"}}>
                 Marital Status
   </Text>
-  <View style={{flexDirection:"row", flexWrap:"wrap", width:351, justifyContent:"space-between"}}>
+  
+  <View style={{flexDirection:"row", flexWrap:"wrap", width:"100%", justifyContent:"space-between"}}>
     {status.map((statuses, key) => {
       return (
-        <View key={key}> 
+        <View style={{
+        width: "48%",
+        
+        marginTop: 0.006*vh,
+        
+      }} key={key}> 
           {checkers == key ? (
             <TouchableOpacity style={{flexDirection:"row",  borderWidth: 1,
-                                        borderRadius: 12,borderColor: "#f44336", 
-                                        width: 165,
-                                        height:40,
+                                        borderRadius: vw * 0.04,borderColor: "#f44336", 
+                                        width: "100%",
+                                        height:0.062*vh,
                                         alignItems: 'center',
-                                        marginTop: 5,
+                                        marginTop: 0.006*vh,
                                       }}
                                 >
               <Image style={styles.img} source={require('../assets/radio-buttona.png')} />
-              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: 14, paddingLeft: 20}}>
+              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: vw * 0.04, paddingLeft: 20}}>
                 {statuses}
               </Text>
             </TouchableOpacity>
@@ -306,7 +318,7 @@ return (
                                 key={key}
                                 >
               <Image style={styles.img} source={require('../assets/radio-buttonb.png')} />
-              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: 14, paddingLeft: 20}}>
+              <Text style={{color:'#515151', fontFamily:'Poppins-Regular', fontSize: vw * 0.04, paddingLeft: 20}}>
                 {statuses}
               </Text>
             </TouchableOpacity>
@@ -317,21 +329,21 @@ return (
           
               
           </View>
-
+          
       
           </View>
           <View style={{width: '85%',}}>
-            <Text style={{marginTop: 24, 
-              fontSize: 16,
+            <Text style={{marginTop: vh * 0.019, 
+              fontSize: vw * 0.045,
               fontFamily:'Poppins-Regular',
               marginBottom: -5,
               color:'#515151'}}> Date Of Birth</Text>
           <Pressable style={{
-            height:40,
-            fontSize: 15,
+            height:0.062*vh,
+            fontSize: vw * 0.045,
             fontFamily:'Poppins-Regular',
             borderWidth: 1,
-            borderRadius: 10,
+            borderRadius: vw * 0.04,
             borderColor: "#224b5f",
             backgroundColor:"#eee",
             alignItems: "center",
@@ -339,7 +351,7 @@ return (
     
     }} onPress={() => showMode('date')}>
     
-    <Text style={{color:"#515151", fontFamily:'Poppins-Regular',fontSize: 15}}>{text}</Text>
+    <Text style={{color:"#515151", fontFamily:'Poppins-Regular',fontSize: vw * 0.040}}>{text}</Text>
   </Pressable>
     
     
@@ -354,7 +366,7 @@ return (
       onChange={onChange}
       />
   )}
-  {young && <Text style={{fontSize: 12,
+  {young && <Text style={{fontSize: vw * 0.030,
     fontFamily:'Poppins-Regular',
     
     color:'#F44336', }}>
@@ -364,13 +376,14 @@ return (
   
 
   <View style={{width: '100%'}}>
-  <TextInput style={{width: '100%',  marginTop: 11,
-    height:40,
-    fontSize: 15,
-    fontFamily:'Poppins-Regular',
-    borderWidth: 1,
-   borderRadius: 10,
-    borderColor: "#224b5f",
+  <TextInput style={{width: '100%',  
+   height:0.062*vh,
+            fontSize: vw * 0.045,
+            fontFamily:'Poppins-Regular',
+            borderWidth: 1,
+            borderRadius: vw * 0.04,
+            borderColor: "#224b5f",
+            marginTop: vh * 0.008,
     backgroundColor:"#eee",
     alignItems: "center",
     justifyContent:"center",
@@ -385,13 +398,14 @@ return (
     onChangeText={(text) => setNumber(text)} >
 
     </TextInput>
-    <TextInput style={{width: '100%',  marginTop: 11,
-    height:40,
-    fontSize: 15,
-    fontFamily:'Poppins-Regular',
-    borderWidth: 1,
-   borderRadius: 10,
-    borderColor: "#224b5f",
+    <TextInput style={{width: '100%',   
+     height:0.062*vh,
+            fontSize: vw * 0.045,
+            fontFamily:'Poppins-Regular',
+            borderWidth: 1,
+      borderRadius: vw * 0.04,
+     borderColor: "#224b5f",
+     marginTop: vh * 0.008,
     backgroundColor:"#eee",
     alignItems: "center",
     justifyContent:"center",
@@ -408,14 +422,14 @@ return (
   </View>
   </View>
  
-<View style={{height:200,width: '100%', alignItems: "center",
+<View style={{height:vh * 0.130,width: '100%', alignItems: "center",
     }}>
    <TouchableOpacity  style={allInputsFilled ? styles.buttoon : styles.disablebutton}
         disabled={!allInputsFilled}
         
   onPress={handleSubmit}>
      {!isLoading ? (
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Submit </Text>
         ):(
@@ -456,21 +470,21 @@ const styles = StyleSheet.create({
 
   },
   TextInput:{
-    marginTop: 11,
-    height:40,
-   width: '85%',
-    fontSize: 15,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 0.006*vh,
+    height:0.062*vh,
+    width: '85%',
+    fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
     borderWidth: 1,
-   borderRadius: 10,
+   borderRadius: vw * 0.04,
     borderColor: "#224b5f",
     backgroundColor:"#eee",
-   
-    
     alignItems: "center",
-    justifyContent:"center",
-    textAlign:"left",
-    paddingLeft: 20,
+    textAlign:"center",
+    color:"#22292F"
     
     
   },
@@ -486,23 +500,23 @@ const styles = StyleSheet.create({
    
   },
   buttoon:{
-    marginTop: 40,
-    height:45,
+    marginTop: 0.012*vh,
+    height:0.065*vh,
     width: '85%',
     
-   borderRadius: 15,    
+   borderRadius: vw * 0.04,    
     backgroundColor:"#f44336",
     alignItems: "center",
     justifyContent:"center",
     textAlign:"center",
-    
+
   },
   disablebutton:{
-    marginTop: 40,
-    height:45,
+    marginTop: 0.012*vh,
+    height:0.065*vh,
     width: '85%',
     
-   borderRadius: 15,    
+   borderRadius: vw * 0.04,    
     backgroundColor:"gray",
     alignItems: "center",
     justifyContent:"center",
@@ -510,7 +524,7 @@ const styles = StyleSheet.create({
     
   },
   buttonTxt:{
-    fontSize: 15,
+    fontSize: vw * 0.040,
     fontFamily:'Poppins-Regular',
     
   },
@@ -523,24 +537,25 @@ const styles = StyleSheet.create({
   },
   flex:{
     flexDirection: 'row',
-              alignItems: 'center',  marginTop: 5,
-              height:40,
-              width: 165,
+              alignItems: 'center',  marginTop: 0.006*vh,
+              height:0.062*vh,
+              width: "100%",
               backgroundColor:"#eee",
-              fontSize: 14,
+              fontSize: vw * 0.040,
               borderWidth: 1,
-             borderRadius: 12,
+             borderRadius: vw * 0.034,
              borderColor: "#224b5f",
               color: "#fff" 
   },
   radio: {
+    width: "100%",
     flexDirection: 'row',
     justifyContent: 'space-between'
  },
   img: {
-    height: 22, 
-    width: 22,
-    marginHorizontal: 5,
+    width: vw * 0.045,
+     height: vh * 0.023,
+    marginHorizontal: vw * 0.004,
   },
   btn: {
    
@@ -569,13 +584,15 @@ const styles = StyleSheet.create({
   },
   textParagraph:{
     
-    fontSize: 15,
+    fontSize: vw * 0.038,
     fontFamily:'Poppins-Regular',
     width:'80%',
     color:'#515151',
     alignItems: 'center',
     textAlign:'center',
-    paddingBottom: 10
+    paddingBottom: 0.001*vh,
+    
+
     
   }
 });

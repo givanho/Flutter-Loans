@@ -1,11 +1,11 @@
 import { StyleSheet, View,Text, Pressable ,ScrollView, TextInput, Image,TouchableOpacity} from 'react-native'
-import {  getDoc, doc, } from "firebase/firestore"; 
-import { db , users} from "../firebase"
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../contest";
 import { useFonts } from 'expo-font';
 import Lottie from 'lottie-react-native';
+import {vw, vh} from './MyDimensions'
 
 
 
@@ -65,20 +65,20 @@ const ForgotPassword = ({navigation}) => {
 
   return (
    
-    <ScrollView style={{paddingTop: '30%'}}>
+    <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.container}>
       
     
         <View style={styles.svg}>
           <Image  source={require('../assets/Resetpassword-pana.png')}
-          style={{ width: 250, height: 150 }} />
+          style={{ width: 0.51*vw, height: 0.27*vh ,marginTop:"5%" }} />
         </View>
 
         <View style={styles.TextInput}>
           <View style={{display: 'flex',
           flexDirection: 'row', justifyContent:'center'}}>
             <Image  source={require('../assets/person.png')}
-          style={{ width: 30, height: 30 }} />
+          style={{ width: vw * 0.075, height: vh * 0.043 }} />
 
 <TextInput style={styles.TextInputed} placeholder={'Email'} placeholderTextColor={"#686868"} 
     autoCapitalize="none"
@@ -102,7 +102,7 @@ const ForgotPassword = ({navigation}) => {
    
     <TouchableOpacity style={styles.button} onPress={handleSubmit} >
     {!isLoading ? (
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize:  vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Reset Password </Text>
         ):(
@@ -120,16 +120,16 @@ const ForgotPassword = ({navigation}) => {
             navigation.navigate('SignIn');
           }} >
     
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize:  vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Sign In </Text>
        
         
   </TouchableOpacity>
-    <Text style={{fontSize: 18,
+    <Text style={{fontSize:  vw * 0.045,
     fontFamily:'Poppins-Regular',
-    
-    color:'#515151', marginTop: 30}}>
+    alignText:'center', alignSelf:'center',
+    color:'#515151', marginTop: vh * 0.020, marginBottom:vh * 0.08}}>
         Don't have an account? {' '}
         <Text
           style={{color: '#F44336', textDecorationLine: "underline"}}
@@ -165,7 +165,7 @@ const ForgotPassword = ({navigation}) => {
     },
     error:{
     
-      fontSize: 11,
+      fontSize:   vw * 0.035,
       fontFamily:'Poppins-Regular',
       
       color:'red',
@@ -176,7 +176,7 @@ const ForgotPassword = ({navigation}) => {
     },
     success:{
     
-        fontSize: 14,
+      fontSize:  vw * 0.035,
         fontFamily:'Poppins-Regular',
         
         color:'green',
@@ -208,57 +208,62 @@ const ForgotPassword = ({navigation}) => {
     },
     TextInput:{
       display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 5,
-      height:50,
-      width: '85%',
-      fontSize: 16,
-      fontFamily:'Poppins-Regular',
-      borderWidth: 1.5,
-     borderRadius: 18,
-      borderColor: "#224b5f",
-      backgroundColor:"#eee",
-      alignItems: "center",
-      textAlign:"center",
-      color:"#22292F"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 0.007*vh,
+    height:0.065*vh,
+    width: '85%',
+    fontSize: vw * 0.045,
+    fontFamily:'Poppins-Regular',
+    borderWidth: 1.5,
+   borderRadius: vw * 0.04,
+    borderColor: "#224b5f",
+    backgroundColor:"#eee",
+    alignItems: "center",
+    textAlign:"center",
+    color:"#22292F"
+    
       
     },
     TextInputed:{
      
-      fontSize: 16,
-      fontFamily:'Poppins-Regular',
-      width: '85%',
-     justifyContent:'center',
-      backgroundColor:"#eee",
-      alignItems: "center",
-      textAlign:"center",
-      color:"#22292F"
+      fontSize: vw * 0.045,
+    fontFamily:'Poppins-Regular',
+    width: '85%',
+   justifyContent:'center',
+    backgroundColor:"#eee",
+    alignItems: "center",
+    textAlign:"center",
+    color:"#22292F"
+    
       
     },
     button:{
-      marginTop: 10,
-      height:45,
-      width: '85%',
-      
-     borderRadius: 15,    
-      backgroundColor:"#f44336",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
+      marginTop: 0.012*vh,
+    height:0.065*vh,
+    width: '85%',
+    
+   borderRadius: vw * 0.04,    
+    backgroundColor:"#f44336",
+    alignItems: "center",
+    justifyContent:"center",
+    textAlign:"center",
+
       
     },
     buttoon:{
-      marginTop: 10,
-      height:55,
-      width: '85%',
-      
-     borderRadius: 15,    
+      marginTop: 0.012*vh,
+    height:0.065*vh,
+    width: '85%',
+    
+   borderRadius: vw * 0.04,    
+    backgroundColor:"#f44336",
+    alignItems: "center",
+    justifyContent:"center",
+    textAlign:"center",
+    
       backgroundColor:"#224b5f",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-      
+     
     }
   });
   

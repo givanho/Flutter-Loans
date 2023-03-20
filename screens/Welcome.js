@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable , Linking, TextInput, TouchableOpacity, BackHandler,ImageBackground,
+import { StyleSheet, View, Text, Pressable , Linking, TextInput, ScrollView, TouchableOpacity, BackHandler,ImageBackground,
   StatusBar, Alert, Image} from 'react-native'
 import React , {useEffect, useState} from 'react'
 import { getFirestore, collection,setDoc, addDoc, getDocs, 
@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { LinearGradient } from 'expo-linear-gradient';
 import SlidingText from '../utils/SlidingText';
+import {vw, vh} from './MyDimensions'
 
 import { db } from "../firebase"
 import {UserAuth} from "../contest"
@@ -22,12 +23,11 @@ const Welcome = ({navigation}) => {
                     '₦100,000 Loan successfully disbursed to (058*****)'];
   const { user, logout} = UserAuth();
   const [movies, setMovies] = useState([])
-  const [headerMale, setHeaderMale] = useState(false);
-  const [headerFemale, setHeaderFemale] = useState(false);
+  
   useEffect(() => {
     const backAction = async () => {
       try{
-        navigation.navigate("SignIn");
+        navigation.navigate("Home");
         await logout()
     
         return true;
@@ -77,7 +77,6 @@ const Welcome = ({navigation}) => {
      
    
       getMovies()
-  
     }, [user])
     
    
@@ -85,10 +84,10 @@ const Welcome = ({navigation}) => {
   return (
     
     <View style={styles.container}>
-      <View style={{
+      <ScrollView style={{
         width: '100%',
         height: '100%',
-        top:0}}>
+        }}>
 
 
 
@@ -98,31 +97,32 @@ const Welcome = ({navigation}) => {
         style={styles.upper}>
       
       <Image  source={require('../assets/patterns.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute'}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0,left:vw * 0.14}} />
            <Image  source={require('../assets/pencil.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:0,left:70}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.07,left:vw * 0.20}} />
 <Image  source={require('../assets/paper-airplane.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:10,left:130}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.08,left:vw * 0.37}} />
           <Image  source={require('../assets/leaf.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:30,right:10}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.03,right:vw * 0.08}} />
           <Image  source={require('../assets/love.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:95,right:30}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.13,right:vw * 0.08}} />
           <Image  source={require('../assets/get-money.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:70,left:0}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.08,left:vw * 0}} />
           <Image  source={require('../assets/right-arrow-angle.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:90,left:100}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.15,left:vw * 0.20}} />
           <Image  source={require('../assets/laptop.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:20,right:-80}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.10,right:vw * 0.25}} />
           <Image  source={require('../assets/bag.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',right:120}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',right:vw * 0.33}} />
           <Image  source={require('../assets/bulb.png')}
-          style={{ width: 60, height: 60,opacity:0.14,position:'absolute',left:30,top:140}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.14,position:'absolute',top:vh * 0.20,left:vw * 0}} />
           <Image  source={require('../assets/deal.png')}
-          style={{ width: 60, height: 60,opacity:0.14,position:'absolute',right:70,top:160}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.14,position:'absolute',top:vh * 0.24,left:vw * 0.57}} />
           <Image  source={require('../assets/chat-balloon.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',left:190,top:120}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.24,left:vw * 0.84}} />
           <Image  source={require('../assets/dollar-sign-inside-oval-shape.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',left:110,top:160}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.24,left:vw * 0.33}} />
+
 <View style={{flexDirection:'row', justifyContent:'space-between', width: '85%', alignItems:'center', alignSelf:'center'}}>
   <View>
       {  movies.map((movie,idx) =>(
@@ -133,45 +133,38 @@ const Welcome = ({navigation}) => {
                     color:'#fff',
                     alignItems: "flex-start",
                     textAlign:'left',
-                    paddingBottom: 10, 
-                    fontSize: 19,}} key={idx}>
+                     
+                    fontSize: vw * 0.045,}} key={idx}>
                      Welcome, {'\n'+movie.data.firstName}
                       
                       </Text>))}
                       </View>
-                      <View style={{ borderRadius:50, borderColor:'#fff',width: 40, height: 40, borderWidth:2,
+                      <View style={{ borderRadius:50, borderColor:'#fff',width: vw * 0.090, height: vw * 0.090, borderWidth:1.5,
                        justifyContent:'center', alignItems:'center'}}>
                       <Image  source={require('../assets/userprof.png')}
-          style={{ width: 30, height: 30,}} />
+          style={{ width: vw * 0.070, height: vw * 0.070,}} />
           </View>
                       </View>
                       
                       <View style={styles.radio}>
-                      <View style={{
                       
-                      
-                        
-                      }}>
         <Text style={{color:'#FFF',
-    fontSize: 18, 
+    fontSize: vh * 0.03, 
     fontFamily:'Poppins-SemiBold', 
-    alignItems: 'center',
     textAlign:'center',
-    paddingTop:28
+    
     }}>
          Max Loan Limit 
         </Text>
         <Text style={{color:'#fff',
-    fontSize: 52, 
+    fontSize: vh * 0.08, 
    fontFamily:'Poppins-SemiBold', 
-    paddingTop:0,
-    marginTop:-20,
-    alignItems: 'center',
-    textAlign:'center'}}>
+    textAlign:'center',
+    marginTop:-vh * 0.02}}>
         ₦5,000,000
         </Text>
        
-      </View>
+      
 
                        
                       </View>
@@ -196,69 +189,69 @@ const Welcome = ({navigation}) => {
        <View style={styles.card}>
         <View style={styles.per}>
        <View styles={{width: '100%', height: '100%', borderRadius: 10, overflow: 'hidden',}}>
-           <View style={{ width: 60, height: 60 ,borderRadius:50, borderWidth:1.5, borderColor:'#224b5f',
-              elevation:10,  alignItems: 'center',backgroundColor:'#f5f5f5',top:20,left:10,
+           <View style={{ width: vh * 0.08, height: vh * 0.08 ,borderRadius:50, borderWidth:1.5, borderColor:'#224b5f',
+              elevation:10,  alignItems: 'center',backgroundColor:'#f5f5f5',top:vh * 0.028,left:10,
               justifyContent: 'center'
               }}>   
             <Image  source={require('../assets/worker.png')}
-              style={{ width: 50, height: 50 }} />
+              style={{ width: vh * 0.06, height: vh * 0.06 }} />
               </View>
               <Text style={{color:'#22292F',  alignItems: 'center',
-                           fontSize: 25,
-                          fontFamily:'Poppins-SemiBold',paddingTop:23,left:10}}>
+                           fontSize: vh * 0.032,
+                          fontFamily:'Poppins-SemiBold',paddingTop:vh * 0.031,left:10}}>
               Personal{'\n'}Loan
             </Text>
             <Text style={{color:'#22292F',  alignItems: 'center',
-                          fontSize: 13,
-                          fontFamily:'Poppins-Regular',top:-10, left:10}}>
+                          fontSize: vh * 0.020,
+                          fontFamily:'Poppins-Regular',top:-vh * 0.005, left:10}}>
                Borrow up to {'\n'}₦1,000,000
             </Text>
         </View>
         <TouchableOpacity  style={styles.buttoona} onPress={() => {
     navigation.navigate("Personal");
   }}>
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vh * 0.025,
                         color:"#FFF",
                         left:10,
                         fontFamily:'Poppins-SemiBold',}}>Apply</Text>
                          <Image  source={require('../assets/right-arrows.png')}
-              style={{ width: 25, height: 25 ,right:10}} />
+              style={{ width: vh * 0.033, height: vh * 0.024 ,right:10}} />
         </TouchableOpacity>
         </View>
         <View style={styles.per}>
        <View styles={{width: '100%', height: '100%', borderRadius: 10, overflow: 'hidden',}}>
-           <View style={{ width: 60, height: 60 ,borderRadius:50, borderWidth:1.5, borderColor:'#f44336',
-              elevation:10,  alignItems: 'center',backgroundColor:'#f5f5f5',top:20,left:10,
+           <View style={{width: vh * 0.08, height: vh * 0.08 ,borderRadius:50, borderWidth:1.5, borderColor:'#f44336',
+              elevation:10,  alignItems: 'center',backgroundColor:'#f5f5f5',top:vh * 0.028,left:10,
               justifyContent: 'center'
               }}>   
             <Image  source={require('../assets/cooperation.png')}
-              style={{ width: 50, height: 50 }} />
+              style={{ width: vh * 0.06, height: vh * 0.06 }} />
               </View>
               <Text style={{color:'#22292F',  alignItems: 'center',
-                           fontSize: 25,
-                          fontFamily:'Poppins-SemiBold',paddingTop:23,left:10}}>
+                           fontSize: vh * 0.032,
+                          fontFamily:'Poppins-SemiBold',paddingTop:vh * 0.031,left:10}}>
               Business{'\n'}Loan
             </Text>
             <Text style={{color:'#22292F',  alignItems: 'center',
-                          fontSize: 13,
-                          fontFamily:'Poppins-Regular',top:-10, left:10}}>
+                          fontSize: vh * 0.020,
+                          fontFamily:'Poppins-Regular',top:-vh * 0.005, left:10}}>
                Borrow up to {'\n'}₦5,000,000
             </Text>
         </View>
         <TouchableOpacity  style={styles.buttoon} onPress={() => {
     navigation.navigate("Business");
   }}>
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vh * 0.025,
                         color:"#FFF",
                         left:10,
                         fontFamily:'Poppins-SemiBold',}}>Apply</Text>
                          <Image  source={require('../assets/right-arrows.png')}
-              style={{ width: 25, height: 25 ,right:10}} />
+              style={{ width: vh * 0.033, height: vh * 0.024 ,right:10}} />
         </TouchableOpacity>
         </View>
        </View>
        </View>
-      </View>
+      </ScrollView>
       
       
       
@@ -279,7 +272,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     color: '#01566F',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'center',
     
@@ -288,11 +281,11 @@ const styles = StyleSheet.create({
   },
   upper:{
    
-    backgroundColor: "#eee",
+  
     borderBottomEndRadius: 50,
     borderBottomStartRadius: 50,
     width: '100%',
-    height: '40%',
+    height: vh * 0.40,
     
     
     
@@ -304,45 +297,13 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 40,
     width: '100%',
     height: '40%',
-    top:-45
+    top:'-10%'
     
     
   },
-  TextInput:{
-    marginTop: 11,
-    height:40,
-   width: '85%',
-    fontSize: 15,
-    fontFamily:'Poppins-Regular',
-    borderWidth: 1.5,
-   borderRadius: 10,
-    borderColor: "#224b5f",
-    backgroundColor:"#eee",
-   
-    
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"left",
-    paddingLeft: 20,
-    
-    
-  },
-  button:{
-    marginTop: 40,
-    height:45,
-    marginBottom:20,
-   borderBottomLeftRadius: 18,    
-   borderBottomRightRadius: 18,    
-    backgroundColor:"#37474F",
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"center",
-   
-  },
+  
   buttoon:{
-    
-    height:45,
-    
+    height:vh * 0.062,
    borderBottomLeftRadius: 18,    
    borderBottomRightRadius: 18,    
     backgroundColor:"#f44336",
@@ -354,8 +315,7 @@ const styles = StyleSheet.create({
   },
   buttoona:{
     
-    height:45,
-    
+    height:vh * 0.062,
    borderBottomLeftRadius: 18,    
    borderBottomRightRadius: 18,    
     backgroundColor:"#224b5f",
@@ -365,36 +325,13 @@ const styles = StyleSheet.create({
     flexDirection:'row'
     
   },
-  buttonTxt:{
-    fontSize: 15,
-    fontFamily:'Poppins-Regular',
-    
-  },
-  logout:{
-   width:"85%",
-   alignItems: "center",
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-   
-  },
-  flex:{
-    flexDirection: 'row',
-              alignItems: 'center',  marginTop: 5,
-              height:40,
-              width: 165,
-              backgroundColor:"#eee",
-              fontSize: 14,
-              borderWidth: 1,
-             borderRadius: 12,
-             borderColor: "#224b5f",
-              color: "#fff" 
-  },
+ 
   radio: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: 'column',
+    justifyContent: 'center',
    
     alignContent:'center',
-    alignItems: 'center'
+    alignItems: 'center',top:vh * 0.08
  },
   img: {
     height: 22, 
@@ -418,7 +355,7 @@ const styles = StyleSheet.create({
   
   textHeading:{
     color:'#22292F',
-    fontSize: 19, 
+    fontSize: vh * 0.03, 
     narginBottom: 5,
     fontFamily:'Poppins-SemiBold', 
     paddingTop:10,

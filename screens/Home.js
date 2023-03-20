@@ -1,10 +1,9 @@
 import { StyleSheet, View,Easing, Animated,Text, Pressable , Linking, TextInput,
   Platform, StatusBar, Image, ScrollView,KeyboardAvoidingView, TouchableOpacity, ActivityIndicator,TouchableWithoutFeedback} from 'react-native'
 
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, } from "react";
 import { UserAuth } from "../contest";
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,8 +12,7 @@ import Lottie from 'lottie-react-native';
 import 'react-native-reanimated'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import PhoneSignUp from './PhoneSignUp';
-import { set } from 'react-native-reanimated';
-
+import {vw, vh} from './MyDimensions'
 
 
 
@@ -34,8 +32,6 @@ const Home = ({ navigation }) => {
   const [password1, setPassword1] = useState("")
   const [error, setError] = useState("")
   const {createUser} = UserAuth();
-  const [checked, setChecked] = useState();
-  const [headerShown, setHeaderShown] = useState(true);
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(true);
   const [showPassword1, setShowPassword1] = useState(true);
@@ -53,19 +49,13 @@ const Home = ({ navigation }) => {
     return null;
   }
   onLayoutRootView()
- 
-  // const clicking=()=>{
-  //   if (vissible == true){
-  //     setHeaderShown(true)
-  //   }
-  //   else if (vissible == false){
-  //     setHeaderShown(false);
-  //   }
-  // }
+ const justclick = async () => {
+  navigation.navigate("Details");
+ }
+
    const handleSubmit = async (e) => {
       e.preventDefault()
       setError('')
-     
       try {
         setIsLoading(true);
         if(password1 === password){
@@ -100,11 +90,12 @@ const Home = ({ navigation }) => {
       
         <View style={styles.svg}>
           <Image  source={require('../assets/Signuppana.png')}
-          style={{ width: 180, height: 150 }} />
+          style={{ width: 0.41*vw, height: 0.20*vh }} />
         </View>
      
 <ScrollView style={{display: 'flex', flexDirection: 'column', 
-      width: '85%', height:'100%', backgroundColor:"#eee", marginBottom:15, alignContent:'center'}}>
+      width: '85%', height:'100%', backgroundColor:"#F5F5F5", marginBottom:vh * 0.024, alignContent:'center'}}
+      showsVerticalScrollIndicator={false}>
 
         <View >
 
@@ -113,40 +104,41 @@ const Home = ({ navigation }) => {
             <Text style={styles.textHeading} > Welcome To Flutter Loans</Text>
             
           </View>
-          <View>
-          <TouchableOpacity style={{width:'50%',borderTopRightRadius:50, borderBottomRightRadius:50 }} onPress={() => navigation.navigate('Payment')}><Text>
-            hello
-            </Text>
-             </TouchableOpacity>
-          </View>
+       
           
         <View>
             <Text style={styles.textParagraph}>
               
-             Borrow up to ₦5 Million Naira Business Loans and Personal Loans as high as{'\n'} ₦1 Million Naira. Sign up to get started
-            </Text>
+            Sign Up or Sign In to get started! </Text>
           </View>
+
         </View>
-        <View style={{display:'flex', flexDirection:'column', width:'100%',alignItems:'center',alignContent:'center'}}>
+        
+          <Pressable style={styles.button} onPress={justclick}>
+          <Text> hello </Text>
+          </Pressable>
+        <View style={{display:'flex', flexDirection:'column', width:0.85 * vw ,height:0.12 * vh,
+        alignItems:'center',alignContent:'center'}}>
               <Text style={styles.textHeading}>
                 Sign up with
               </Text>
 
               <View style={{display:'flex', flexDirection:'row', width:'100%',borderColor:'#224b5f',
-              borderRadius:13, borderWidth:1 , justifyContent:'center',alignItems:'center'}}>
- <TouchableOpacity style={{width:'50%',borderTopRightRadius:50, borderBottomRightRadius:50 }} onPress={() => setVissible(true)}>
-  {vissible ? <View style={{backgroundColor:'#224b5f', width:'100%',alignItems:'center',borderBottomLeftRadius:12, borderTopLeftRadius:12}} >
+              borderRadius:12, borderWidth:1.5 , justifyContent:'center',alignItems:'center'}}>
+ <TouchableOpacity style={{width:'50%'}} onPress={() => setVissible(true)}>
+  {vissible ? <View style={{backgroundColor:'#224b5f', width:'100%',alignItems:'center',
+                                              borderBottomLeftRadius:vh * 0.012, borderTopLeftRadius:vh * 0.012}} >
                       
-                      <Text style={{color:'#ffffff',alignItems:'center',fontSize: 16, marginBottom:4,marginTop:4,justifyContent:'center',
-                                      
-                                      fontFamily:'Poppins-SemiBold', }}>
+                      <Text style={{color:'#fff',alignItems:'center',fontSize: vw * 0.050, marginBottom:vh * 0.004,marginTop:vh * 0.004,
+                                    justifyContent:'center',fontFamily:'Poppins-SemiBold'}}>
                   Email
                 </Text>
-                      </View> : <View style={{backgroundColor:'#eee', width:'100%',alignItems:'center',borderBottomLeftRadius:12, borderTopLeftRadius:12}} >
+                      </View> : <View style={{backgroundColor:'#eee', width:'100%',alignItems:'center',
+                                              borderBottomLeftRadius:vh * 0.012, borderTopLeftRadius:vh * 0.012,marginLeft:vw * 0.004}} >
                       
-                      <Text style={{color:'#22292F',alignItems:'center',fontSize: 16, marginBottom:4,marginTop:4,justifyContent:'center',
-                                      
-                                      fontFamily:'Poppins-SemiBold', }}>
+                      <Text style={{color:'#22292F',alignItems:'center',fontSize: vw * 0.050, marginBottom:vh * 0.004,
+                                    marginTop:vh * 0.004,justifyContent:'center',
+                                      fontFamily:'Poppins-SemiBold',}}>
                   Email
                 </Text>
                       </View>}
@@ -154,26 +146,29 @@ const Home = ({ navigation }) => {
                     
                     
                     </TouchableOpacity>
-                    <View style={{backgroundColor:'#eee', position:'absolute', height:40, width:'12%', borderRadius:50,zIndex:9999,
-                     alignContent:'center', alignItems:'center',alignSelf:'center', justifyContent:'center', borderColor:'#f44336', borderWidth:2}}>
-                      <Text style={{color:'#22292F',alignItems:'center',fontSize: 15, marginBottom:4,marginTop:4,justifyContent:'center',
-                                      
-                                      fontFamily:'Poppins-SemiBold',}}>Or</Text>
+                    <View style={{backgroundColor:'#eee', position:'absolute', height:vh * 0.055, width:vh * 0.055, 
+                                  borderRadius:vw * 0.050,zIndex:9999,
+                     alignContent:'center', alignItems:'center',alignSelf:'center', justifyContent:'center',
+                      borderColor:'#f44336', borderWidth:2}}>
+                      <Text style={{color:'#22292F',fontSize: vw * 0.045, marginBottom:vh * 0.004,
+                                  marginTop:vh * 0.004, fontFamily:'Poppins-SemiBold', alignContent:'center', 
+                                  alignItems:'center',alignSelf:'center', justifyContent:'center',}}>Or</Text>
                     </View>
        
  <TouchableOpacity style={{width:'50%'}} onPress={() => setVissible(false)}>
- {vissible ? <View style={{backgroundColor:'#eee', width:'100%',alignItems:'center',justifyContent:'space-evenly',borderBottomRightRadius:12, borderTopRightRadius:12}} >
+ {vissible ? <View style={{backgroundColor:'#eee', width:'100%',alignItems:'center',marginLeft:vw * -0.003,
+                            justifyContent:'space-evenly',borderBottomRightRadius:vh * 0.012, borderTopRightRadius:vh * 0.012}} >
                       
-                      <Text style={{color:'#22292F',alignItems:'center',fontSize: 16, marginBottom:4,marginTop:4,justifyContent:'center',
-                                      
+                      <Text style={{color:'#22292F',alignItems:'center',fontSize: vw * 0.050, marginBottom:vh * 0.004,
+                                    marginTop:vh * 0.004,justifyContent:'center',
                                       fontFamily:'Poppins-SemiBold', }}>
                   Phone
                 </Text>
-                      </View> : <View style={{backgroundColor:'#224b5f', width:'100%',alignItems:'center',borderBottomRightRadius:12, borderTopRightRadius:12}} >
+                      </View> : <View style={{backgroundColor:'#224b5f', width:'100%',alignItems:'center',
+                                              borderBottomRightRadius:vh * 0.012, borderTopRightRadius:vh * 0.012}} >
                       
-                      <Text style={{color:'#fff',alignItems:'center',fontSize: 16, marginBottom:4,marginTop:4,justifyContent:'center',
-                                      
-                                      fontFamily:'Poppins-SemiBold', }}>
+                      <Text style={{color:'#fff',alignItems:'center',fontSize: vw * 0.050, marginBottom:vh * 0.004,marginTop:vh * 0.004,
+                                    justifyContent:'center', fontFamily:'Poppins-SemiBold', }}>
                   Phone
                 </Text>
                       </View>}
@@ -187,7 +182,7 @@ const Home = ({ navigation }) => {
           <View style={{display: 'flex',
           flexDirection: 'row', justifyContent:'center'}}>
             <Image  source={require('../assets/person.png')}
-          style={{ width: 30, height: 30 }} />
+          style={{ width: vw * 0.075, height: vh * 0.043 }} />
 
           <TextInput  style={styles.TextInputed} placeholder={'Email'} placeholderTextColor={"#686868"} 
        autoCapitalize="none"
@@ -203,10 +198,10 @@ const Home = ({ navigation }) => {
       
      
       <View style={styles.TextInput}>
-          <View style={{display: 'flex',
-          flexDirection: 'row', justifyContent:'center',width:'95%', marginLeft:10}}>
+          <View style={{display: 'flex', alignItems: "center",
+          flexDirection: 'row', justifyContent:'center',width:'95%', marginLeft:vw * 0.020}}>
             <Image  source={require('../assets/padlocked.png')}
-          style={{ width: 22, height: 22 }} />
+          style={{ width: vw * 0.060, height: vh * 0.033 }} />
 
 <TextInput style={styles.TextInputed} placeholder='Password'placeholderTextColor={"#686868"}
       autoCapitalize="none"
@@ -220,8 +215,8 @@ const Home = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={() => setShowPassword1(!showPassword1)}>
          
         <View>{showPassword1 ?<Image source={require('../assets/hide.png')}
-          style={{ width: 22, height: 22 }} /> :<Image  source={require('../assets/view.png')}
-          style={{ width: 22, height: 22 }} />}</View> 
+          style={{ width: vw * 0.060, height: vh * 0.020 }} /> :<Image  source={require('../assets/view.png')}
+          style={{ width: vw * 0.060, height: vh * 0.020 }} />}</View> 
           </TouchableWithoutFeedback>
       
       </View>
@@ -231,10 +226,11 @@ const Home = ({ navigation }) => {
       
       
       <View style={styles.TextInput}>
-          <View style={{display: 'flex',
-          flexDirection: 'row', justifyContent:'center',width:'95%', marginLeft:10}}>
+   
+          <View style={{display: 'flex', alignItems: "center",
+          flexDirection: 'row', justifyContent:'center',width:'95%', marginLeft:vw * 0.020}}>
             <Image  source={require('../assets/padlocked.png')}
-          style={{ width: 22, height: 22 }} />
+          style={{ width: vw * 0.060, height: vh * 0.033 }} />
 
 <TextInput style={styles.TextInputed} placeholder='Re-enter Password'placeholderTextColor={"#686868"}
       autoCapitalize="none"
@@ -248,8 +244,8 @@ const Home = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={() => setShowPassword(!showPassword)}>
          
         <View>{showPassword ?<Image source={require('../assets/hide.png')}
-          style={{ width: 22, height: 22 }} /> :<Image  source={require('../assets/view.png')}
-          style={{ width: 22, height: 22 }} />}</View> 
+          style={{ width: vw * 0.060, height: vh * 0.020 }} /> :<Image  source={require('../assets/view.png')}
+          style={{ width: vw * 0.060, height: vh * 0.020 }} />}</View> 
           </TouchableWithoutFeedback>
       
       </View>
@@ -257,7 +253,7 @@ const Home = ({ navigation }) => {
         
         </View>
      
-      {error &&  <Text style={{fontSize: 12,
+      {error &&  <Text style={{fontSize: vw * 0.030,
     fontFamily:'Poppins-Regular',
     
     color:'#F44336', }}>
@@ -269,7 +265,7 @@ const Home = ({ navigation }) => {
        
       <Pressable style={styles.button} onPress={handleSubmit}>
         {!isLoading ? (
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Sign Up </Text>
         ):(
@@ -292,10 +288,10 @@ const Home = ({ navigation }) => {
        
        
     
-      <Text style={{ fontSize: 15,
+      <Text style={{ fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
     alignText:'center', alignSelf:'center',
-    color:'#515151', marginTop: 30}}>
+    color:'#515151', marginTop: vh * 0.020}}>
           Already have an account? {' '}
           <Text
             style={{color: '#F44336', textDecorationLine: "underline"}}
@@ -332,40 +328,40 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: 'auto',
     
-    marginBottom: 15,
+    marginBottom: 0.012*vh,
   },
   textHeading:{
     color:'#22292F',
-    fontSize: 19, 
-    narginBottom: 5,
+    fontSize: vw * 0.050 , 
+    marginBottom: -0.008*vh,
     fontFamily:'Poppins-SemiBold', 
-    paddingTop:10,
+    paddingTop:0.012*vh,
     alignItems: 'center',
     textAlign:'center'
     
   },
   textParagraph:{
     
-    fontSize: 15,
+    fontSize: vw * 0.035,
     fontFamily:'Poppins-Regular',
     
     color:'#515151',
     alignItems: 'center',
     textAlign:'center',
-    paddingBottom: 10
+    paddingBottom: 0.015*vh
     
   },
   TextInput:{
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 5,
-    height:50,
+    marginTop: 0.007*vh,
+    height:0.065*vh,
     width: '100%',
-    fontSize: 16,
+    fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
     borderWidth: 1.5,
-   borderRadius: 18,
+   borderRadius: vw * 0.04,
     borderColor: "#224b5f",
     backgroundColor:"#eee",
     alignItems: "center",
@@ -375,7 +371,7 @@ const styles = StyleSheet.create({
   },
   TextInputed:{
    
-    fontSize: 16,
+    fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
     width: '85%',
    justifyContent:'center',
@@ -386,11 +382,11 @@ const styles = StyleSheet.create({
     
   },
   button:{
-    marginTop: 10,
-    height:45,
+    marginTop: 0.012*vh,
+    height:0.065*vh,
     width: '100%',
     
-   borderRadius: 15,    
+   borderRadius: vw * 0.04,    
     backgroundColor:"#f44336",
     alignItems: "center",
     justifyContent:"center",

@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, TouchableOpacity, Animated ,StyleSheet,BackHandler, Text,Easing} from 'react-native';
 
 import Lottie from 'lottie-react-native';
+import {vw, vh} from './MyDimensions'
+
 
 export default function MyComponent({navigation, route: { params } }) {
   const { bank, account, raiden, range,
     month,
-    duration } = params;
+    interest,bvn } = params;
 
   const[isVisible, SetIsVisible] = useState(null)
 
@@ -30,7 +32,7 @@ export default function MyComponent({navigation, route: { params } }) {
   useEffect(() => {
     Animated.timing(animationProgress.current, {
       toValue: 1,
-      duration: 25000,
+      duration: 10000,
       easing: Easing.linear,
       useNativeDriver: false
     }).start();
@@ -39,15 +41,15 @@ export default function MyComponent({navigation, route: { params } }) {
     const timer = setTimeout(() => {
       // navigation.navigate("Granted");
       SetIsVisible(true)
-    }, 25000);
+    }, 10000);
     return () => clearTimeout(timer);
   }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('Granted', { bank, account, raiden, range, month, duration });
+      navigation.navigate('Granted', { bank, account, raiden, range, month, interest,bvn });
       SetIsVisible(true)
-    }, 27000);
+    }, 13000);
     return () => clearTimeout(timer);
   }, [])
 
@@ -55,7 +57,7 @@ export default function MyComponent({navigation, route: { params } }) {
     <View style={[StyleSheet.absoluteFill]}>
       {isVisible ? <View style={{width:'50%', height:'100%',flexDirection:'column',
         justifyContent:'center',alignItems:'center',alignContent:'center',alignSelf:'center',}}>
-      <View style={{width:'50%', height:100,
+      <View style={{width:0.1*vh, height:0.1*vh,
      alignItems:'center',alignContent:'center',alignSelf:'center',}}>
       <Lottie source={require('../assets/animation/checked.json')}
         style={{
@@ -102,7 +104,7 @@ export default function MyComponent({navigation, route: { params } }) {
        }}>
      <Lottie source={require('../assets/animation/loaderbar.json')}
      progress={animationProgress.current}
-     style={{width:'60%',top:-15}}
+     style={{width:'60%',top:-0.02*vh}}
         colorFilters={[
         {
           keypath: 'Shape Layer 1',
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
     
   }, textParagrapha:{
     
-    fontSize: 23,
+    fontSize: vw * 0.048,
     fontFamily:'Poppins-Regular',
     color:'#224b5f',
     alignSelf:'center',
@@ -144,11 +146,9 @@ const styles = StyleSheet.create({
   },
   textParagraphb:{
     
-    fontSize: 13,
+    fontSize: vw * 0.032,
     fontFamily:'Poppins-Regular',
-   
     alignContent:'center',
-    
     alignItems: 'center',
     textAlign:'center',
     

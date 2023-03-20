@@ -32,12 +32,11 @@ function Header() {
          backgroundColor: '#F5F5F5',
          
           headerTransparent: false,
-         headerBackVisible: false,
+         headerBackVisible: true,
         
         },
         title:'',
-        headerLayoutPreset: 'center',
-       
+        headerLayoutPreset: 'center',       
         headerShadowVisible: false,
        
        

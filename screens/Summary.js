@@ -1,25 +1,15 @@
-import { StyleSheet, View, Text, Pressable , Linking, TextInput, TouchableOpacity, BackHandler,
-    StatusBar, Alert, Image,SafeAreaView,Button,  ScrollView} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity,  Image,ScrollView} from 'react-native'
 import React , {useEffect, useState} from 'react'
-import axios from 'axios';
-import LoanGranted from './LoanGranted';
-import LoanSummaryContext from '../LoanSummaryContext';
+import {vw, vh} from './MyDimensions'
 
 const LoanSummary = ({navigation, route: { params } }) => {
   
-  // Use the props here
+  // props are gotten from the other components via navigation
   const { bank, account, raiden, range,
-    month,
-    duration } = params;
+    month,bvn,
+    interest } = params;
    
-  console.log(raiden)
-  console.log(range)
-  console.log(month)
-  console.log(duration)
-  
-
   return (
-    
     
     <View style={styles.container}>
       
@@ -33,21 +23,21 @@ const LoanSummary = ({navigation, route: { params } }) => {
         
       <View style={styles.svg}>
         <Image  source={require('../assets/Presentation1.png')}
-        style={{ width: 380, height: 210 }} />
+        style={{ width: vw * 0.54, height: vh * 0.3 }} />
       </View>
 
 
 </View>
-<ScrollView style={{ width:'100%', height:'60%', alignContent:'center', paddingTop:20,borderColor:'red'
+<ScrollView style={{ width:'100%', height:'60%', alignContent:'center', paddingTop:vh * 0.015,
 }} >
-<View  style={{backgroundColor:'#fff',width:'85%', alignSelf:'center',borderRadius:25, elevation: 5, borderColor:'red'
+<View  style={{backgroundColor:'#fff',width:'85%', alignSelf:'center',borderRadius:vh * 0.025, elevation: 5,
 }}>
 
  {/* Render the component using the props */}
  <View style={{ flexDirection:'row', alignItems:'center',
-borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
+borderBottomColor:'#F5F5F5', borderBottomWidth:vh * 0.005, borderStyle: 'solid'}}>
  <Image  source={require('../assets/loansummary/bank.png')}
-        style={{ width: 40, height: 40, marginLeft:20 }} />
+        style={{ width: vw * 0.070, height: vw * 0.070, marginLeft:15}} />
  <View style={{ alignItems:'flex-start'}}>
  <Text style={styles.textParagraph}>Bank</Text>
  <Text style={styles.textParagrapha}>{bank}</Text>
@@ -55,9 +45,9 @@ borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
     </View>
 
     <View style={{ flexDirection:'row', alignItems:'center',
-borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
+borderBottomColor:'#F5F5F5', borderBottomWidth:vh * 0.005, borderStyle: 'solid'}}>
   <Image  source={require('../assets/loansummary/accounting.png')}
-        style={{ width: 40, height: 40, marginLeft:20 }} />
+        style={{ width: vw * 0.070, height: vw * 0.070, marginLeft:15}} />
       <View style={{ alignItems:'flex-start'}}>
 
     <Text style={styles.textParagraph}>
@@ -67,9 +57,9 @@ borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
      </View>
 
      <View style={{ flexDirection:'row', alignItems:'center',
-borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
+borderBottomColor:'#F5F5F5', borderBottomWidth:vh * 0.005, borderStyle: 'solid'}}>
   <Image  source={require('../assets/loansummary/id-card.png')}
-        style={{ width: 40, height: 40, marginLeft:20 }} />
+        style={{ width: vw * 0.070, height: vw * 0.070, marginLeft:15 }} />
       <View style={{ alignItems:'flex-start'}}>
        <Text style={styles.textParagraph}>
        Account Name</Text>
@@ -78,9 +68,9 @@ borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
     </View>
 
     <View style={{ flexDirection:'row', alignItems:'center',
-borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
+borderBottomColor:'#F5F5F5', borderBottomWidth:vh * 0.005, borderStyle: 'solid'}}>
   <Image  source={require('../assets/loansummary/money-bag.png')}
-        style={{ width: 40, height: 40, marginLeft:20 }} />
+        style={{ width: vw * 0.070, height: vw * 0.070, marginLeft:15 }} />
     <View style={{ alignItems:'flex-start'}}>
        <Text style={styles.textParagraph}>
        Loan Amount</Text>
@@ -90,36 +80,40 @@ borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
        </View>
 
        <View style={{ flexDirection:'row', alignItems:'center',
-borderBottomColor:'#bfc1c1', borderBottomWidth:1, borderStyle: 'dashed'}}>
+borderBottomColor:'#F5F5F5', borderBottomWidth:vh * 0.005, borderStyle: 'solid'}}>
   <Image  source={require('../assets/loansummary/clock.png')}
-        style={{ width: 40, height: 40, marginLeft:20 }} />
+        style={{ width: vw * 0.070, height: vw * 0.070, marginLeft:15}} />
     <View style={{ alignItems:'flex-start'}}>
        <Text style={styles.textParagraph}>
        Loan Duration</Text>
-       <Text style={styles.textParagrapha}>{month} Months</Text>
+       <Text style={styles.textParagrapha}>{month} Month( s )</Text>
     </View>
     </View>
 
     <View style={{ flexDirection:'row', alignItems:'center',
 }}>
   <Image  source={require('../assets/loansummary/interest-rate.png')}
-        style={{ width: 40, height: 40, marginLeft:20 }} />
+        style={{ width: vw * 0.070, height: vw * 0.070, marginLeft:15 }} />
     <View style={{ alignItems:'flex-start'}}>
        <Text style={styles.textParagraph}>
        Loan Interest</Text>
        <Text style={styles.textParagrapha}> ₦{' '}
-       <Text style={styles.textParagrapha}>{duration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text></Text>
+       <Text style={styles.textParagrapha}>{interest.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text></Text>
     </View>
     </View>
 
     
  
 </View>
-<View>
+<View style={{width: '100%',
+    
+       
+     alignItems: "center",
+     justifyContent:"center",}}>
                         <TouchableOpacity  style={styles.submit} onPress={() => {
-    navigation.navigate('Waiting', { bank, account, raiden, range, month, duration });
+    navigation.navigate('Waiting', { bank, account, raiden, range, month, interest,bvn });
   }}>
-                          <Text style={{fontSize: 16,
+                          <Text style={{fontSize: vw * 0.045   ,
                                         color:"#FFF",
                                         fontFamily:'Poppins-SemiBold',}}>
                               Get Loan
@@ -152,81 +146,56 @@ const styles = StyleSheet.create({
    
     height: 'auto',
     width: 'auto',
-    marginBottom: 15,
+    marginBottom: -vh * 0.025,
   },
   textHeading:{
     // color:'#22292F',
-    color:'#224b5f',
-    fontSize: 19, 
-    narginBottom: 5,
+    color:'#22292F',
+    fontSize: vw * 0.050 , 
+    marginBottom: -0.008*vh,
     fontFamily:'Poppins-SemiBold', 
-    paddingTop:10,
+    paddingTop:0.012*vh,
     alignItems: 'center',
     textAlign:'center'
     
   },
   textParagraph:{
     
-    fontSize: 15,
+    fontSize: vw * 0.040,
     fontFamily:'Poppins-Regular',
-    marginLeft:30 ,
+    marginLeft:vw * 0.055 ,
     color:'#515151',
     alignItems: 'center',
     alignContent:'center',
-    paddingTop:10
+    paddingTop:vh * 0.010,
+
     
     
   },
   textParagrapha:{
     
-    fontSize: 17,
+    fontSize: vw * 0.042,
     fontFamily:'Poppins-Regular',
-    marginLeft:30 ,
+    marginLeft:vw * 0.055  ,
     color:'#224b5f',
     alignItems: 'center',
     textAlign:'center',
-    paddingBottom: 10
+    paddingBottom: vh * 0.010 
     
   },
-  TextInput:{
-    marginTop: 5,
-    height:50,
-    width: '85%',
-    fontSize: 16,
-    fontFamily:'Poppins-Regular',
-    borderWidth: 1.5,
-   borderRadius: 18,
-    borderColor: "#224b5f",
-    backgroundColor:"#eee",
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"center",
-    color:"#22292F"
-    
-  },
+  
   submit:{
-    marginTop: 20,
-    height:50,
+    marginTop: 0.012*vh,
+    height:0.065*vh,
     width: '85%',
-    marginBottom:50,
-   borderRadius: 15,    
+    marginBottom: 0.045*vh,
+    
+   borderRadius: vw * 0.04,    
     backgroundColor:"#f44336",
     alignItems: "center",
     justifyContent:"center",
     textAlign:"center",
-    alignSelf: 'center',
     
   },
-  button:{
-    marginTop: 10,
-    height:45,
-    width: '85%',
-    
-   borderRadius: 18,    
-    backgroundColor:"#f44336",
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"center",
-    
-  }
+ 
 });

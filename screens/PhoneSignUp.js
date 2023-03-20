@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View,Easing, Animated,Text, Pressable , Linking, TextInput, Button,
-  Platform, StatusBar, Image, ScrollView,KeyboardAvoidingView,Alert, TouchableOpacity, ActivityIndicator,TouchableWithoutFeedback} from 'react-native'
-  import { db , users} from "../firebase"
-  import {  getDoc, doc, } from "firebase/firestore"; 
+import React, { useState, useEffect,} from 'react';
+import { StyleSheet, View,Text,  TextInput,
+  Image,TouchableOpacity, } from 'react-native'
+  import {vw, vh} from './MyDimensions'
 
 import { UserAuth } from '../contest';
 import Lottie from 'lottie-react-native';
-import parsePhoneNumber from 'libphonenumber-js'
 
 
 const PhoneSignup = ({navigation}) => {
@@ -14,7 +12,6 @@ const PhoneSignup = ({navigation}) => {
     user, verificationId,setVerificationId,logout,setErrorInfo, errorinfo} = UserAuth();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-const [realError, setRealError] = useState('');
 
   
   
@@ -47,16 +44,16 @@ const [realError, setRealError] = useState('');
           <View style={{display: 'flex',
           flexDirection: 'row', justifyContent:'center'}}>
             <Image  source={require('../assets/person.png')}
-          style={{ width: 30, height: 30 }} />
+          style={{width: vw * 0.075, height: vh * 0.043 }} />
 
       <View style={{display: 'flex', width:'35%',paddingLeft:15,
           flexDirection: 'row', justifyContent:'space-between',}}>
       <Image  source={require('../assets/nigeria.png')}
-          style={{ width: 30, height: 30 }} />
+          style={{ width: vw * 0.075, height: vh * 0.043  }} />
       <Text style={styles.TextInputed} >+234 </Text>
       </View>
 <View style={{width:'50%',
-           borderLeftWidth:1.2,borderColor:'#333',paddingLeft:1,alignSelf:'center',
+           borderLeftWidth:1,borderColor:'#333',paddingLeft:1,alignSelf:'center',
            }}>
           <TextInput  style={styles.TextInputer} 
           placeholder={'Phone Number'} 
@@ -84,7 +81,7 @@ const [realError, setRealError] = useState('');
                         title= "Send Verification Code"
                         disabled={!phoneNumber} >
         {!isLoading ? (
-            <Text style={{fontSize: 16,
+            <Text style={{fontSize: vw * 0.045,
         color:"#FFF",
         fontFamily:'Poppins-SemiBold',}}>  Submit </Text>
         ):(
@@ -128,7 +125,7 @@ const [realError, setRealError] = useState('');
                     disabled={!verificationCode}
                     onPress = {() => handleVerifyVerificationCode()}>
     {!isLoading ? (
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Confirm Code </Text>
         ):(
@@ -206,7 +203,7 @@ const styles = StyleSheet.create({
   },
   error:{
     
-    fontSize: 11,
+    fontSize: vw * 0.030,
     fontFamily:'Poppins-Regular',
     
     color:'red',
@@ -218,14 +215,14 @@ const styles = StyleSheet.create({
   TextInput:{
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
-    height:50,
+    justifyContent: 'center',
+    marginTop: 0.007*vh,
+    height:0.065*vh,
     width: '100%',
-    fontSize: 16,
+    fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
     borderWidth: 1.5,
-   borderRadius: 18,
+    borderRadius: vw * 0.04,
     borderColor: "#224b5f",
     backgroundColor:"#eee",
     alignItems: "center",
@@ -235,7 +232,7 @@ const styles = StyleSheet.create({
   },
   TextInputed:{
    
-    fontSize: 16,
+    fontSize: vw * 0.045,
     fontFamily:'Poppins-Regular',
     width: '85%',
     
@@ -248,7 +245,7 @@ const styles = StyleSheet.create({
   },
   TextInputer:{
    
-    fontSize: 16,
+    fontSize: vw * 0.043,
     fontFamily:'Poppins-Regular',
     width: '85%',
     alignSelf:'center',
@@ -259,15 +256,14 @@ const styles = StyleSheet.create({
     
   },
   button:{
-    marginTop: 10,
-    height:45,
+    marginTop: 0.012*vh,
+    height:0.065*vh,
     width: '100%',
     
-   borderRadius: 15,    
+   borderRadius: vw * 0.04,    
     backgroundColor:"#f44336",
     alignItems: "center",
     justifyContent:"center",
-    textAlign:"center",
-    
+    textAlign:"center", 
   }
 });

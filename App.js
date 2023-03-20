@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { AppState, Subscription, Image} from 'react-native';
+import React, { useEffect} from "react";
+import { Dimensions, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './screens/Home';
@@ -19,7 +19,6 @@ import MyComponent from './screens/Waiting';
 import LoanGranted from './screens/LoanGranted';
 import LoanDisbursed from './screens/LoanDisbursed';
 import Headed from './screens/Headed';
-import Free from './screens/free';
 import ForgotPassword from "./screens/ForgotPassword";
 import PaymentScreen from "./screens/flutter";
 import {
@@ -41,7 +40,8 @@ function App() {
   const apps = getApp();
   const auth = getAuth(apps);
 
-
+  const vw = Dimensions.get('window').width;
+  const vh = Dimensions.get('window').height;
   const logout = () => {
     return signOut(auth);
     
@@ -49,26 +49,9 @@ function App() {
   useEffect(() => {
     // This function will be executed only on app launch
     logout()
-    console.log('App launched!');
+  
   }, []);
-  // useEffect(() => {
-    // Add an event listener to AppState changes
-   // AppState.addEventListener('change', handleAppStateChange);
-  //  console.log('user just signed out appstate')
-// logout()
-    // Clean up the event listener on unmount
-   // return () => {
-    //  AppState.removeEventListener('change', handleAppStateChange);
-   // };
-  // }, []);
-
-  // const handleAppStateChange = (nextAppState) => {
-  //   if (nextAppState === 'background') {
-  //     console.log('user just signed out appstate')
-
-  //     logout()
-  //   }
-  // };
+  
 
   return (
     
@@ -88,11 +71,11 @@ function App() {
          headerBackVisible: false,
         
         },
-        title:'',
+        title:null,
         headerLayoutPreset: 'center',
         headerLeft: () => <Image  source={require('./assets/flutterrebrand.png')}
         
-        style={{ width: 150, height: 37,alignSelf: 'center', alignItems: 'center', justifyContent: 'center',marginLeft:110}} />,
+        style={{ width: 0.43 * vw, height: 0.07 * vh, alignSelf: 'center', alignItems: 'center', justifyContent: 'center',marginLeft: vw /4.3}} />,
         headerShadowVisible: false,
        
        
@@ -113,7 +96,6 @@ function App() {
      <Stack.Screen name='Waiting' component={MyComponent} />
      <Stack.Screen name='Granted' component={LoanGranted} />
      <Stack.Screen name='Disbursed' component={LoanDisbursed} />
-     <Stack.Screen name='free' component={Free} />
      <Stack.Screen name='Password' component={ForgotPassword} />
       <Stack.Screen name='Payment' component={PaymentScreen} />
 
@@ -134,7 +116,7 @@ function App() {
         headerLayoutPreset: 'center',
         headerLeft: () => <Image  source={require('./assets/flutterrebrandwhite.png')}
         
-        style={{ width: 150, height: 37,alignSelf: 'center', alignItems: 'center', justifyContent: 'center',marginLeft:110}} />,
+        style={{ width: 0.43 * vw, height: 0.07 * vh, alignSelf: 'center', alignItems: 'center', justifyContent: 'center',marginLeft: vw /4.3}} />,
         headerShadowVisible: false,
        
        
@@ -156,6 +138,5 @@ function App() {
   )
 
 }
-
 export default App;
 

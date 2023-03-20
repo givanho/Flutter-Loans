@@ -1,33 +1,24 @@
 import Business from "./Business";
 import LoanDisbursed from "./LoanDisbursed";
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image ,StyleSheet} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Welcome from "./Welcome";
 import Personal from "./Personal";
 import Details from "./Details";
 import Header from "./header";
 import { Ionicons } from '@expo/vector-icons';
+import {vw, vh} from './MyDimensions'
 
 const Tab = createBottomTabNavigator();
-function CustomTabIcon({ focused }) {
-  const handleClick =() =>{
-    let Icon;
 
-  }
-  return (
-    <Image
-      source={focused ? require('../assets/home.png') : require('../assets/home.png')}
-      style={{ width: 34, height: 34 }}
-    />
-  );
-}
 export default function BottomTabNavigator() {
   return (
     <Tab.Navigator 
-    
+    screenOptions={{
+      tabBarStyle: styles.tabBar,
       
-    options={{
+    
        
         headerShown: false,
         headerStyle: {
@@ -38,10 +29,9 @@ export default function BottomTabNavigator() {
          headerBackVisible: false,
         
         },
-        title:'',
+        title:'Loan',
         headerLayoutPreset: 'center',
        headerShadowVisible: false,
-       
        
      }} > 
       <Tab.Screen name="Loan_T" component={Header} options={{
@@ -49,16 +39,14 @@ export default function BottomTabNavigator() {
        headerShown: false,
        headerStyle: {
          elevation:0,
-        backgroundColor: '#fff',
-        
+        backgroundColor: '#000',
          headerTransparent: false,
         headerBackVisible: false,
-        
        },
        tabBarIcon:  ({ color, size ,focused}) => (
         <Image
       source={focused ? require('../assets/homey.png') : require('../assets/home.png')}
-      style={{ width: 32, height: 30 }}
+      style={{ width: vh * 0.035, height: vh * 0.035,marginTop:vh * 0.020 }}
     />),
        title:'',
        
@@ -79,7 +67,7 @@ export default function BottomTabNavigator() {
        tabBarIcon:  ({ color, size ,focused}) => (
         <Image
       source={focused ? require('../assets/bluefill.png') : require('../assets/usecase.png')}
-      style={{ width: 32, height: 30 }}
+      style={{ width: vh * 0.035, height: vh * 0.035,marginTop:vh * 0.020,   }}
     />),
        title:'',
        headerLayoutPreset: 'center',
@@ -91,3 +79,10 @@ export default function BottomTabNavigator() {
     </Tab.Navigator>
   );
 }
+const styles = StyleSheet.create({
+  tabBar: {
+    height: vh * 0.065,
+    backgroundColor:'#f5f5f5'
+     // set the height to 80
+  },
+});
