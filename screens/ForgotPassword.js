@@ -1,7 +1,7 @@
-import { StyleSheet, View,Text, Pressable ,ScrollView, TextInput, Image,TouchableOpacity} from 'react-native'
+import { StyleSheet, View,Text,ScrollView, TextInput, Image,TouchableOpacity} from 'react-native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { UserAuth } from "../contest";
 import { useFonts } from 'expo-font';
 import Lottie from 'lottie-react-native';
@@ -185,27 +185,8 @@ const ForgotPassword = ({navigation}) => {
        
         
       },
-    textHeading:{
-      color:'#22292F',
-      fontSize: 19, 
-      narginBottom: 5,
-      fontFamily:'Poppins-SemiBold', 
-      paddingTop:10,
-      alignItems: 'center',
-      textAlign:'center'
-      
-    },
-    textParagraph:{
-      
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      
-      color:'#515151',
-      alignItems: 'center',
-      textAlign:'center',
-      paddingBottom: 10
-      
-    },
+    
+  
     TextInput:{
       display: 'flex',
     flexDirection: 'row',

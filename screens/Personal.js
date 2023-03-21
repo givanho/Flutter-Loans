@@ -1,11 +1,17 @@
-import { StyleSheet, View, Text, Pressable , Linking, TextInput, TouchableOpacity, BackHandler,
-  StatusBar, Alert, Image,SafeAreaView,Button,  ScrollView} from 'react-native'
+import { StyleSheet, View, Text,  TextInput, TouchableOpacity, BackHandler, ScrollView} from 'react-native'
 import React , {useEffect, useState} from 'react'
 import Slider from '@react-native-community/slider';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import Lottie from 'lottie-react-native';
+import { setDoc, doc } from "firebase/firestore"; 
+import { db } from '../firebase';
+import {UserAuth} from "../contest"
+import {bankapi} from "@env"
+import {vw, vh} from './MyDimensions'
+
+
 const banks=[
   {
     "id": 302,
@@ -1630,12 +1636,14 @@ const Personal = ({navigation}) => {
   const [duration, setDuration] = useState('');
   const [sliding, setSliding] = useState('');
   const [interest, setInterest] = useState('');
+  const [total, setTotal] = useState('');
 
   const [bvn, setBvn]= useState('');
  
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 const [isLoading, setIsLoading] = useState(false)
+const { user, logout} = UserAuth();
 
 useEffect(() => {
     const backAction = async () => {
@@ -1684,91 +1692,105 @@ useEffect(() => {
 const [showComponents, setShowComponents] = useState(false);
 
 // Define a state variable to store the API response data
-const [responseData, setResponseData] = useState('');
 const allInputsFilled = bvn !=='' && account !=='' && code !=='' && bank !== '' && contacts !== ''
 && range !== '' && month !== '' 
 useEffect(() => {
-  
-  const LoanCalculator = () =>{
-      if(bvn.length == 11){
-          setBvnerror(null)
-          const whole = (range / 100) * 3
-         console.log(whole)
-         const dua = (whole / 3) * month
-
-    if(range >= 500000 && month >=6 ){
-
-     const rear = (whole / 4) * month
+    
+    const LoanCalculator = () =>{
+        if(bvn.length == 11){
      
-     console.log("rear " + rear)
+        const monthlyInterest = month *1000 - 1000
+            setBvnerror(null)
+            if (range <= 50000 && month==1) {
+                setInterest((10 * range)/100);
+                }
+
+              else if(range <= 50000 && month > 1){
+                setInterest((10 * range)/100 + monthlyInterest);
+
+                }
+                else if(range <= 500000 && month==1){
+                    setInterest((9 * range)/100)
+                }
+                else if(range <= 500000 && month > 1){
+                    setInterest((9 * range)/100 + monthlyInterest);
+    
+                    }
+                    else if(range <= 1000000 && month==1){
+                        setInterest((8 * range)/100)
+                    }
+                    else if(range <= 1000000 && month > 1){
+                        setInterest((8 * range)/100 + monthlyInterest)
+                    }
+              
+        const sumtotal = range + interest
+  
+       } else{
+           setBvnerror("Incorrect BVN")
+       }
+       setShowComponents(true);
     }
-
-
-         console.log(dua)
-         setDuration(dua)
-         console.log('duration '+ duration)
-     } else{
-         setBvnerror("Incorrect BVN")
-     }
-     setShowComponents(true);
-  }
-  LoanCalculator()
-}); 
-  
-useEffect(() => {
-  
-  const fetchData = async () => {
-    try {
-      const options = {
+    LoanCalculator()
+  }); 
+   
+  const handlePress = async () => {
+    const options = {
         method: "GET",
         url:  `https://api.paystack.co/bank/resolve?account_number=${account}&bank_code=${code}`,
         headers: {
-          Authorization: 'Bearer '+'sk_test_919e3b90cef46e56e055363af4536511d74d5990',
+          Authorization: `Bearer ${bankapi}`,
         }
       };
+    try {
+        setIsLoading(true);
+        const response = await axios(options);
+        const raiden = response.data.data.account_name
+        
+        if(response.data.error){
+            setIsLoading(false)
+            setError(response.data.error)
+            throw new Error(`Error in response : ${response.data.error}`);
+        }
+        if(bvnerror){
+            setIsLoading(false)
+            throw new Error('BVn Error : ');
+        }
+        console.log(response.data.data)
+        console.log(response.data.data.account_name)
+        
 
-      const response = await axios(options);
-      
-      setContacts(response.data.data.account_name);
-      console.log(response.data.data)
-      setError(null);
-    } catch (error) {
-      console.error(error.response.data.message);
-      setError('Error: Check your Bank or Account number');
-    }
-  };
+        setError(null);
+        console.log('contacts =>'+raiden)
+        
+        //Save a doc for users loan applications to firebase
+        await setDoc(doc(db, "loanDeal", user.email || user.phoneNumber), {
+            Bank: bank,
+            Account: account,
+             Contacts: raiden,
+             Amount: range,
+             Duration: month,
+             Interest: interest
+       });
 
-  fetchData();
-}, [account, code]);
+       navigation.navigate("Summary", {
+        bank,
+        account,
+        raiden,
+        range,
+        month,
+        interest
+    })
 
-const handlePress =() => {
-  //  handleSubmit();
-  console.log(bank)
- 
-  navigation.navigate("Summary", {
-      bank,
-      account,
-      
-      contacts,
-      range,
-      month,
-      duration
-  })
 
+
+      } catch (error) {
+        console.error(error.response.data.message);
+        setIsLoading(false)
+        setError('Error: Check your Bank or Account number');
+        return;
+      }
    
- 
-};
-const handleClick =() =>{
-  navigation.navigate("Summary", {
-      bank,
-      account,
-      
-      contacts,
-      range,
-      month,
-      duration
-  })
-}
+  };
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
     <View style={styles.container}>
@@ -1783,8 +1805,8 @@ const handleClick =() =>{
       color:'#515151',
       alignItems: 'center',
       textAlign:'center',
-      paddingBottom: 10, 
-      fontSize: 14,
+      paddingBottom: vh * 0.010, 
+      fontSize: vh * 0.021,
   }}>
                 Apply to get a Peronal Loan in less than 5 Minutes
                 </Text>
@@ -1796,39 +1818,37 @@ const handleClick =() =>{
                 
                  </View>
 
-                <View style={{backgroundColor:'#eee', width:'100%', height:'14%',
-                              alignSelf:'center',borderWidth: 0.5,borderRadius: 20,
+                <View style={{backgroundColor:'#eee', width:'100%', height:vh * 0.15,
+                              alignSelf:'center',borderWidth: 1,borderRadius:  0.06 * vw,
                               borderColor: "#224b5f",}}>
                     <Text style={styles.amountHeading}> ₦{''}
                     <Text style={styles.amountHeading}> {range.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text> </Text>
                   
 
                     <Slider
-                        style={{width: 
-                          '90%', height: 30,   alignSelf:'center',
-                          }}
+                         style={{width: '90%', height: 0.05*vh,   alignSelf:'center', marginTop:-vh * 0.02
+                        }}
                         minimumValue={5000}
                         maximumValue={1000000}
                         minimumTrackTintColor={'#224b5f'}
                         maximumTrackTintColor={'#f44336'}
                         value={5000}
                         step={5000}
-                        thumbImage={  require('../assets/circlewing.png' ) }
+                        thumbTintColor={'#224b5f'}
                         onValueChange={value => setRange(value)}
                         onSlidingStart={() => setSliding('sliding')}
                         onSlidingComplete={() => setSliding('Inactive')}
                       />
-                       <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', paddingTop:-35}}>
-                        <View><Text style={{ fontSize: 10,
+                       <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', marginTop:-vh * 0.01}}>
+                        <View><Text style={{ fontSize: 0.03 * vw,
                                     fontFamily:'Poppins-Regular',
                                     color:'#224b5f'
                                     }}>MIN</Text></View>
-                        <View><Text style={{ fontSize: 10,
+                        <View><Text style={{ fontSize:  0.03 * vw,
                                     fontFamily:'Poppins-Regular',
                                     color:'#224b5f'
                                     }}>MAX</Text></View></View>
                 </View>
-                
                 <View  >
                         <Text style={styles.textParagraph}>
                         Please select a loan duration
@@ -1836,17 +1856,18 @@ const handleClick =() =>{
                         
                 </View>
 
-                <View style={{backgroundColor:'#eee', width:'100%', height:'14%',alignSelf:'center',
-                      borderWidth: 1,borderRadius: 20,borderColor: "#224b5f"}}>
+                <View style={{backgroundColor:'#eee', width:'100%', height:vh * 0.15,
+                              alignSelf:'center',borderWidth: 1,borderRadius:  0.06 * vw,
+                              borderColor: "#224b5f",}}>
                     
                     <Text style={styles.amountHeading}> {month} {' '}
         <Text>
-          Months
+          Month( s )
         </Text></Text> 
                   
 
                     <Slider
-                        style={{width:'90%', height: 30,   alignSelf:'center'
+                        style={{width: '90%', height: 0.05*vh,   alignSelf:'center', marginTop:-vh * 0.02
                           }}
                         minimumValue={1}
                         maximumValue={6}
@@ -1855,33 +1876,31 @@ const handleClick =() =>{
                        
                         value={1}
                         step={1}
-                        thumbImage={  require('../assets/circlewing.png' ) }
+                        thumbTintColor={'#224b5f'}
                         onValueChange={value => setMonth(value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','))}
-                        
                         onSlidingStart={() => setSliding('sliding')}
                         onSlidingComplete={() => setSliding('Inactive')}
                       />
-                      <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', paddingTop:-35}}>
-                        <View><Text style={{ fontSize: 10,
+                     <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', marginTop:-vh * 0.01}}>
+                        <View><Text style={{ fontSize: 0.03 * vw,
                                     fontFamily:'Poppins-Regular',
                                     color:'#224b5f'
                                     }}>MIN</Text></View>
-                        <View><Text style={{ fontSize: 10,
+                        <View><Text style={{ fontSize:  0.03 * vw,
                                     fontFamily:'Poppins-Regular',
                                     color:'#224b5f'
                                     }}>MAX</Text></View></View>
-                      
-                   </View>
+                </View>
                    <View>
                 <Text style={styles.textParagraph}>
                 Please Input your BVN
                 </Text>
                 <TextInput style={{width: '100%',
-                                    height:40,
-                                    fontSize: 15,
+                                    height:vh * 0.06,
+                                    fontSize: vh * 0.020,
                                     fontFamily:'Poppins-Regular',
                                     borderWidth: 1,
-                                    borderRadius: 10,
+                                    borderRadius: vw * 0.03,
                                     borderColor: "#224b5f",
                                     backgroundColor:"#eee",
                                     alignItems: "center",
@@ -1897,7 +1916,7 @@ const handleClick =() =>{
     onChangeText={(text) => setBvn(text)} >
         
     </TextInput>
-    <View><Text style={{fontSize: 12,
+    <View><Text style={{fontSize: vw*0.030,
                       color:"#F44336",
                       fontFamily:'Poppins-Regular',}}>{bvnerror}</Text>
 </View>
@@ -1933,9 +1952,9 @@ const handleClick =() =>{
           renderLeftIcon={() => (
             <AntDesign
               style={styles.icon}
-              color={isFocus ? '#37474F' : 'black'}
+              color={isFocus ? '#37474F' : '#224b5f'}
               name="Safety"
-              size={20}
+              size={vw *0.06}
             />
           )}
         />
@@ -1954,11 +1973,11 @@ const handleClick =() =>{
                 Please input your account number
                 </Text>
                 <TextInput style={{width: '100%',
-                                    height:40,
-                                    fontSize: 15,
+                                    height:vh * 0.06,
+                                    fontSize: vw * 0.042,
                                     fontFamily:'Poppins-Regular',
                                     borderWidth: 1,
-                                    borderRadius: 10,
+                                    borderRadius: vw * 0.03,
                                     borderColor: "#224b5f",
                                     backgroundColor:"#eee",
                                     alignItems: "center",
@@ -1985,7 +2004,7 @@ const handleClick =() =>{
         
   onPress={handlePress}>
      {!isLoading ? (
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Submit </Text>
         ):(
@@ -2015,198 +2034,186 @@ const handleClick =() =>{
 export default Personal
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      color: '#01566F',
-      backgroundColor: '#F5F5F5',
-      alignItems: 'center',
-      justifyContent: 'center',
-      heght: "100%",
-     
-    },
-    contentContainer: {
-      paddingVertical: 40
-    },
-    submit:{
-      marginTop: 20,
-      height:45,
-      width: '100%',
-      
-     borderRadius: 15,    
-      backgroundColor:"#f44336",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-      
-    },disablebutton:{
-        marginTop: 40,
-        height:45,
+        flex: 1,
+        color: '#01566F',
+        backgroundColor: '#F5F5F5',
+        alignItems: 'center',
+        justifyContent: 'center',
+        heght: "100%",
+       
+      }, 
+      selectedTextStyle:{
+          color:'#000',
+          left:15,
+          fontSize:vw * 0.042
+      },
+      inputSearchStyle:{
+          
+        backgroundColor: '#eee',
+        borderRadius: vw * 0.030,    
+  
+      },
+  
+      placeholderStyle:{
+          color:'#686868',
+          left:15,
+          fontSize:vw * 0.042
+      },
+      dropdown:{
+  
+          height:vh * 0.06,
+          borderWidth: 1,
+          borderRadius: vw * 0.03,
+          borderColor: "#224b5f",
+          backgroundColor:"#eee",
+          alignItems: "center",
+          justifyContent:"center",
+                                      
+      },
+      iconStyle:{
+          width: 0.04*vh,
+          height:0.04*vh,
+      },
+      contentContainer: {
+        paddingVertical: 0.05*vh
+      },
+      disablebutton:{
+          marginTop: 0.012*vh,
+          height:0.065*vh,
+          width: '100%',
+          
+         borderRadius: vw * 0.04,    
+          backgroundColor:"gray",
+          alignItems: "center",
+          justifyContent:"center",
+          textAlign:"center",
+          
+        
+          
+        },
+        submit:{
+            marginTop: 0.012*vh,
+        height:0.065*vh,
         width: '100%',
         
-       borderRadius: 15,    
-        backgroundColor:"gray",
+       borderRadius: vw * 0.04,    
+        backgroundColor:"#f44336",
+        alignItems: "center",
+        justifyContent:"center",
+        textAlign:"center",
+        
+        },
+      
+      button:{
+          marginTop: 0.08*vh,
+          height:0.065*vh,
+          width: '100%',
+          
+         borderRadius: vw * 0.04,    
+          backgroundColor:"#f44336",
+          alignItems: "center",
+          justifyContent:"center",
+          textAlign:"center",
+          
+        
+       
+      },
+      buttoon:{
+        marginTop: 40,
+        height:45,
+        marginBottom:20,
+       borderBottomLeftRadius: 18,    
+       borderBottomRightRadius: 18,    
+        backgroundColor:"#FF725E",
         alignItems: "center",
         justifyContent:"center",
         textAlign:"center",
         
       },
-    upper:{
-     
-      backgroundColor: '#224b5f',
-      borderBottomEndRadius: 70,
-      borderBottomStartRadius: 70,
-      width: '100%',
-      height: '30%',
-      position:'absolute',
-      top:0,
-    },
-    TextInput:{
-      marginTop: 11,
-      height:40,
-     width: '85%',
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      borderWidth: 1.5,
-     borderRadius: 10,
-      borderColor: "#224b5f",
-      backgroundColor:"#eee",
-     
+      buttonTxt:{
+        fontSize: 15,
+        fontFamily:'Poppins-Regular',
+        
+      },
+      logout:{
+       width:"85%",
+       alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+       
+      },
+      flex:{
+        flexDirection: 'row',
+                  alignItems: 'center',  marginTop: 5,
+                  height:40,
+                  width: 165,
+                  backgroundColor:"#eee",
+                  fontSize: 14,
+                  borderWidth: 1,
+                 borderRadius: 12,
+                 borderColor: "#224b5f",
+                  color: "#fff" 
+      },
+      radio: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+       
+        alignContent:'center',
+        alignItems: 'center'
+     },
+      img: {
+        height: 22, 
+        width: 22,
+        marginHorizontal: 5,
+      },
+      btn: {
+       
+        height:35,
+        width: 80,
+        borderWidth: 1.5,
+       borderRadius: 10,
+        borderColor: "#f44336",
+        backgroundColor:"#eee",
+        alignItems: "center",
+        justifyContent:"center",
+        textAlign:"center",
+      },
       
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"left",
-      paddingLeft: 20,
       
       
-    },
-    button:{
-      marginTop: 40,
-      height:45,
-      marginBottom:20,
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#37474F",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-     
-    },
-    buttoon:{
-      marginTop: 40,
-      height:45,
-      marginBottom:20,
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#FF725E",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-      
-    },
-    buttonTxt:{
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      
-    },
-    logout:{
-     width:"85%",
-     alignItems: "center",
-      flexDirection: 'row',
-      justifyContent: 'space-between'
-     
-    },
-    flex:{
-      flexDirection: 'row',
-                alignItems: 'center',  marginTop: 5,
-                height:40,
-                width: 165,
-                backgroundColor:"#eee",
-                fontSize: 14,
-                borderWidth: 1,
-               borderRadius: 12,
-               borderColor: "#224b5f",
-                color: "#fff" 
-    },
-    radio: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-     
-      alignContent:'center',
-      alignItems: 'center'
-   },
-    img: {
-      height: 22, 
-      width: 22,
-      marginHorizontal: 5,
-    },
-    btn: {
-     
-      height:35,
-      width: 80,
-      borderWidth: 1.5,
-     borderRadius: 10,
-      borderColor: "#f44336",
-      backgroundColor:"#eee",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-    },
-    
-    
-    
-   amountHeading:{
+     amountHeading:{
+          color:'#22292F',
+          fontSize: vh * 0.045, 
+          fontFamily:'Poppins-SemiBold', 
+          paddingTop:vh * 0.005,
+          alignItems: 'center',
+          textAlign:'center'
+          
+        },
+      textHeading:{
         color:'#22292F',
-        fontSize: 29, 
-        narginBottom: 5,
+        fontSize: vw * 0.055, 
         fontFamily:'Poppins-SemiBold', 
-        paddingTop:10,
+        paddingTop:vh * 0.020,
         alignItems: 'center',
         textAlign:'center'
         
       },
-    textHeading:{
-      color:'#22292F',
-      fontSize: 19, 
-      narginBottom: 5,
-      fontFamily:'Poppins-SemiBold', 
-      paddingTop:10,
-      alignItems: 'center',
-      textAlign:'center'
-      
-    },
-    textParagraph:{
-      
-     
-      fontFamily:'Poppins-Regular',
-      
-      color:'#515151',
-      alignItems: 'center',
-      textAlign:'center',
-      marginTop:15,
-      fontSize: 18,
-      
-    },
-  
-      card:{
-        flexDirection:'row',
-        justifyContent: 'space-between',
-        width:'85%'
-      },
-      bus:{
-        borderColor: '#ccc',
-        width:'46%',
-        backgroundColor: '#eee',
-        borderWidth: 0.5,
-        borderRadius: 18,
-      },
-      per:{
+      textParagraph:{
         
-        width:'46%',
-        backgroundColor: '#222',
-        borderColor: '#bbb',
-  
-        borderWidth: 0.5,
-        borderRadius: 18,
+       
+        fontFamily:'Poppins-Regular',
+        
+        color:'#515151',
+        alignItems: 'center',
+        textAlign:'left',
+        marginTop:vh * 0.025,
+        marginBottom:-vh * 0.008,
+        fontSize: vw * 0.042,
+        
       },
+    
+       
   
   
     });

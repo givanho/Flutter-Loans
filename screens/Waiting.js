@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, TouchableOpacity, Animated ,StyleSheet,BackHandler, Text,Easing} from 'react-native';
+import { View, Animated ,StyleSheet,BackHandler, Text,Easing} from 'react-native';
 
 import Lottie from 'lottie-react-native';
 import {vw, vh} from './MyDimensions'
@@ -124,17 +124,7 @@ export default function MyComponent({navigation, route: { params } }) {
   );
 }
 const styles = StyleSheet.create({
-  button:{
-    
-    height:'100%',
-    width: '100%',
-    
-    alignItems:'center'
-    
-    
-  
-    
-  }, textParagrapha:{
+  textParagrapha:{
     
     fontSize: vw * 0.048,
     fontFamily:'Poppins-Regular',

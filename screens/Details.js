@@ -1,14 +1,18 @@
-import { StyleSheet, View, Text, Pressable , Linking, TextInput, TouchableOpacity, BackHandler,
-    StatusBar,Image, Alert, ScrollView} from 'react-native'
+import { StyleSheet, View, Text,  TouchableOpacity, BackHandler,
+   Image, ScrollView} from 'react-native'
   import React , {useEffect, useState} from 'react'
-  import { getFirestore, collection,setDoc, addDoc, getDocs, 
-    doc, DocumentSnapshot, getDoc } from "firebase/firestore"; 
+  import {  collection, getDocs, 
+    doc,getDoc } from "firebase/firestore"; 
 import { LinearGradient } from 'expo-linear-gradient';
   import { db } from "../firebase"
   import {UserAuth} from "../contest"
+import {vw, vh} from './MyDimensions'
+
   const Details = ({navigation}) => {
       
-         
+         const[loanHistory, setLoanHistory] = useState('')
+         const[bvn, setBvn] = useState('')
+         const [loanDate, setLoanDate] = useState('')
       const [movies, setMovies] = useState([])
       const { user, logout} = UserAuth();
       useEffect(() => {
@@ -44,7 +48,10 @@ const docSnap = await getDoc(docRef);
 
 if (docSnap.exists()) {
   const data = docSnap.data();
-  console.log("The Latter "+data.Bank);
+  setLoanHistory(data.Amount)
+  setBvn(data.BVN)
+  setLoanDate(data.FormattedDate)
+
 } else {
   console.log("No such document!");
 }
@@ -102,31 +109,31 @@ if (docSnap.exists()) {
         style={styles.upper}>
       
       <Image  source={require('../assets/patterns.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute'}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0,left:vw * 0.14}} />
            <Image  source={require('../assets/pencil.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:0,left:70}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.07,left:vw * 0.20}} />
 <Image  source={require('../assets/paper-airplane.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:10,left:130}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.08,left:vw * 0.37}} />
           <Image  source={require('../assets/leaf.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:30,right:10}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.03,right:vw * 0.08}} />
           <Image  source={require('../assets/love.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:95,right:30}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.13,right:vw * 0.08}} />
           <Image  source={require('../assets/get-money.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:70,left:0}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.08,left:vw * 0}} />
           <Image  source={require('../assets/right-arrow-angle.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:90,left:100}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.15,left:vw * 0.20}} />
           <Image  source={require('../assets/laptop.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',top:20,right:-80}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.10,right:vw * 0.25}} />
           <Image  source={require('../assets/bag.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',right:120}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',right:vw * 0.33}} />
           <Image  source={require('../assets/bulb.png')}
-          style={{ width: 60, height: 60,opacity:0.14,position:'absolute',left:30,top:140}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.14,position:'absolute',top:vh * 0.20,left:vw * 0}} />
           <Image  source={require('../assets/deal.png')}
-          style={{ width: 60, height: 60,opacity:0.14,position:'absolute',right:70,top:160}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.14,position:'absolute',top:vh * 0.24,left:vw * 0.57}} />
           <Image  source={require('../assets/chat-balloon.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',left:190,top:120}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.24,left:vw * 0.84}} />
           <Image  source={require('../assets/dollar-sign-inside-oval-shape.png')}
-          style={{ width: 60, height: 60,opacity:0.07,position:'absolute',left:110,top:160}} />
+          style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.24,left:vw * 0.33}} />
 
                       
                       <View style={styles.radio}>
@@ -136,23 +143,21 @@ if (docSnap.exists()) {
                         
                       }}>
        <Image  source={require('../assets/userprof.png')}
-          style={{ width: 80, height: 80, alignSelf:'center'}} />
+          style={{ width: vh *0.09, height: vh *0.09, alignSelf:'center'}} />
         {  movies.map((movie,idx) =>(
                     <Text style={{color:'#fff',
-                    fontSize: 32, 
+                    fontSize: vw *0.08, 
                    fontFamily:'Poppins-SemiBold', 
-                    paddingTop:0,
-                    marginTop:20,
+                    marginTop:vh *0.035,
                     alignItems: 'center',
                     textAlign:'center'}}key={idx}>
                      {movie.data.firstName} {movie.data.lastName}
                       </Text>))}
                       {  movies.map((movie,idx) =>(
                     <Text  style={{color:'#fff',
-                    fontSize: 17, 
+                    fontSize: vw *0.045, 
                    fontFamily:'Poppins-SemiBold', 
-                    paddingTop:0,
-                    marginTop:-17,
+                    marginTop:-vh *0.02,
                     alignItems: 'center',
                     textAlign:'center'}}key={idx}>
                       {movie.data.Number}
@@ -180,39 +185,57 @@ if (docSnap.exists()) {
         <View style={styles.bus}>
        <View styles={{width: '100%', height: '100%', borderRadius: 10, overflow: 'hidden',}}>
         
-           <View style={{flexDirection:'row', justifyContent:'center', width: '70%',alignContent:'center',
-            alignItems:'center', alignSelf:'center',marginTop:10, marginBottom:10}}>   
+           <View style={{flexDirection:'row', justifyContent:'space-between', width: '58%',alignContent:'center',
+            alignItems:'center', alignSelf:'center',marginTop:vh *0.010, marginBottom:vh *0.010}}>   
            <View>
             <Image  source={require('../assets/history.png')}
-              style={{ width: 30, height: 30,marginRight:20 , opacity:0.9}} />
+              style={{ width: vh *0.032, height: vh *0.030, opacity:0.9}} />
               </View>
             
             <View><Text style={{color:'#22292F',
-                           fontSize: 16,
+                           fontSize: vw *0.045,
                           fontFamily:'Poppins-SemiBold'}}>Loan History</Text>
                           </View>
               </View>
-              <Text style={{color:'gray',
-                           fontSize: 15,
-                          fontFamily:'Poppins-Regular'}}>
-                            You have not applied for any loans yet
+              {loanHistory ? (
+                       <View style={{flexDirection:"row", justifyContent:'space-between'}}> 
+                      <Text style={[styles.textParagraph, {color:'green'}]}> ₦{' '}
+                        <Text style={[styles.textParagraph, {color:'green'}]}>
+                         {loanHistory.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 
+                         
+
                             </Text>
+                            </Text>
+                            
+                            <Text style={[styles.textParagraph, {color:'green'}]}>
+                              {loanDate}
+                            </Text> 
+                            </View>):(
+                            <View style={{flex:1, height:"100%", width:'100%'
+                           
+                           }}><Text style={{color:'gray',
+                           fontSize: vw *0.038,
+                          fontFamily:'Poppins-Regular'}}>
+                               You have not applied for any loans yet.
+                            </Text>
+                            </View>)}
+              
               
             
         </View>
        
         </View>
         <View style={styles.per}>
-       <View styles={{width: '100%', height: '100%', borderRadius: 10, overflow: 'hidden',}}>
-       <View style={{flexDirection:'row', justifyContent:'center', width: '70%',alignContent:'center',
-            alignItems:'center', alignSelf:'center',marginTop:10, marginBottom:10}}>   
+       <View styles={{width: '100%', height: '100%', borderRadius: 10, backgroundColor:'#000'}}>
+       <View style={{flexDirection:'row', justifyContent:'space-between', width: '30%',alignContent:'center',
+            alignItems:'center', alignSelf:'center',marginTop:vh *0.010, marginBottom:vh *0.010}}>   
            <View>
             <Image  source={require('../assets/file.png')}
-              style={{ width: 30, height: 30,marginRight:20 , opacity:0.9}} />
+              style={{ width: vh *0.035, height: vh *0.035,marginRight:20 , opacity:0.9}} />
               </View>
             
             <View><Text style={{color:'#22292F',
-                           fontSize: 16,
+                           fontSize: vw *0.045,
                           fontFamily:'Poppins-SemiBold'}}>Details</Text>
                           </View>
               </View>
@@ -279,7 +302,7 @@ if (docSnap.exists()) {
                             
                     </View>
                      
-                    <View style={styles.details}>
+                    <View style={[styles.details, {borderBottomWidth:vh *0.0}]}>
                             <View>
                               <Text style={styles.textParagraph}>
                               BVN: 
@@ -288,7 +311,7 @@ if (docSnap.exists()) {
                             <View>
                             {  movies.map((movie,idx) =>(
                     <Text  style={styles.textParagraph} key={idx}>
-                      {movie.data.bvn}
+                      {bvn}
                       </Text>))}
                             </View>
                             
@@ -308,11 +331,11 @@ if (docSnap.exists()) {
         <View style={{paddingRight:15}}>
            <Image 
              source={require('../assets/logout.png')}
-              style={{ width: 20, height: 20 }}/>
+              style={{ width: vh *0.025, height: vh *0.025 }}/>
         </View>
        <View>
         <Text style={{color:'#f44336',
-                     fontSize: 16,
+                     fontSize: vw *0.045,
                      fontFamily:'Poppins-SemiBold'}}>Logout</Text>
        </View>
        </TouchableOpacity>
@@ -348,10 +371,7 @@ if (docSnap.exists()) {
   
     },
     upper:{
-     
-      backgroundColor: "#eee",
-      borderBottomEndRadius: 50,
-      borderBottomStartRadius: 50,
+    
       width: '100%',
       height: '40%',
       
@@ -360,11 +380,11 @@ if (docSnap.exists()) {
     },
     lower:{
    backgroundColor:'#F5F5F5',
-      borderTopEndRadius: 40,
-      borderTopStartRadius: 40,
+      borderTopEndRadius: vh *0.05,
+      borderTopStartRadius: vh *0.05,
       width: '100%',
       height: '100%',
-      top:-82,
+      top:-vh *0.13,
       marginBottom:'50%'
       
       
@@ -372,95 +392,15 @@ if (docSnap.exists()) {
     details:{
       flexDirection: 'row',
       justifyContent:'space-between',
-      width: '69%',
+      width: '75%',
       alignContent:'center',
       alignItems:'center', 
       alignSelf:'center',
-      borderBottomWidth:5.5,
+      borderBottomWidth:vh *0.006,
       borderColor:'#F5F5F5',
   
     },
-    TextInput:{
-      marginTop: 11,
-      height:40,
-     width: '85%',
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      borderWidth: 1.5,
-     borderRadius: 10,
-      borderColor: "#224b5f",
-      backgroundColor:"#eee",
-     
-      
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"left",
-      paddingLeft: 20,
-      
-      
-    },
-    button:{
-      marginTop: 40,
-      height:45,
-      marginBottom:20,
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#37474F",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-     
-    },
-    buttoon:{
-      
-      height:45,
-      
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#f44336",
-      alignItems: "center",
-      justifyContent:"space-between",
-      textAlign:"center",
-      flexDirection:'row'
-      
-    },
-    buttoona:{
-      
-      height:45,
-      
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#224b5f",
-      alignItems: "center",
-      justifyContent:"space-between",
-      textAlign:"center",
-      flexDirection:'row'
-      
-    },
-    buttonTxt:{
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      
-    },
-    logout:{
-     width:"85%",
-     alignItems: "center",
-      flexDirection: 'row',
-      justifyContent: 'space-between'
-     
-    },
-    flex:{
-      flexDirection: 'row',
-                alignItems: 'center',  marginTop: 5,
-                height:40,
-                width: 165,
-                backgroundColor:"#eee",
-                fontSize: 14,
-                borderWidth: 1,
-               borderRadius: 12,
-               borderColor: "#224b5f",
-                color: "#fff" 
-    },
+   
     radio: {
       flexDirection: 'row',
       justifyContent: 'space-around',
@@ -468,46 +408,24 @@ if (docSnap.exists()) {
       alignContent:'center',
       alignItems: 'center'
    },
-    img: {
-      height: 22, 
-      width: 22,
-      marginHorizontal: 5,
-    },
-    btn: {
-     
-      height:35,
-      width: 80,
-      borderWidth: 1.5,
-     borderRadius: 10,
-      borderColor: "#f44336",
-      backgroundColor:"#eee",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-    },
-    
-    
     
     textHeading:{
       color:'#22292F',
-      fontSize: 14, 
-      narginBottom: 5,
+      fontSize: vw*0.040, 
+     
       fontFamily:'Poppins-SemiBold', 
-      paddingTop:10,
+      paddingTop:vh*0.015,
       alignItems: 'center',
       textAlign:'center'
       
     },
     textParagraph:{
-      
-     
       fontFamily:'Poppins-Regular',
-      
       color:'#515151',
       alignItems: 'center',
       textAlign:'center',
-      paddingBottom: 10, 
-      fontSize: 13,
+      paddingTop: vw *0.030, 
+      fontSize: vw *0.035,
   
       
       
@@ -524,30 +442,31 @@ if (docSnap.exists()) {
   
       },
       bus:{
-        height:'15%',
+        height:'13%',
         width:'85%',
         backgroundColor:'#fff',
         borderColor: '#ccc',
-        elevation: 10,
+        elevation: 3,
         borderWidth: 1,
-        borderRadius: 22,
+        borderRadius: vw * 0.05,
         shadowColor: "#aaa",
         justifyContent: 'center',
         flexDirection:'row',
-       marginBottom:3
+       marginBottom:vh * 0.02,
+       marginTop:vh * 0.02
       },
       per:{
         height:'33%',
         width:'85%',
         backgroundColor:'#fff',
         borderColor: '#ccc',
-        elevation: 10,
+        elevation: 3,
         borderWidth: 1,
-        borderRadius: 22,
+        borderRadius:  vw * 0.05,
         shadowColor: "#aaa",
         justifyContent: 'center',
         flexDirection:'row',
-       marginBottom:3
+       marginBottom:vh * 0.02
       },
       
   

@@ -95,7 +95,6 @@ function App() {
      <Stack.Screen name="Summary" component={LoanSummary} />
      <Stack.Screen name='Waiting' component={MyComponent} />
      <Stack.Screen name='Granted' component={LoanGranted} />
-     <Stack.Screen name='Disbursed' component={LoanDisbursed} />
      <Stack.Screen name='Password' component={ForgotPassword} />
       <Stack.Screen name='Payment' component={PaymentScreen} />
 

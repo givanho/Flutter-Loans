@@ -135,7 +135,7 @@ const handleOnRedirect = (data) => {
       isBusy={props.isInitializing}
       disabled={props.disabled}
     >
-      <Text style={{fontSize: 16,
+      <Text style={{fontSize: vw * 0.045,
                                         color:"#FFF",
                                         fontFamily:'Poppins-SemiBold',}}>Bind Card</Text>
     </TouchableOpacity>
@@ -144,7 +144,7 @@ const handleOnRedirect = (data) => {
 
 
                   </View>
-                  <Text style={{fontSize: 12,
+                  <Text style={{fontSize: vw * 0.030,
                       color:"#F44336",
                       fontFamily:'Poppins-Regular',}}>{bind}</Text>
                       
@@ -169,12 +169,7 @@ const styles = StyleSheet.create({
    
 
   },
-  svg:{
-   
-    height: 'auto',
-    width: '100%',
-    marginBottom: 15,
-  },
+ 
   textHeading:{
     // color:'#22292F',
     color:'#224b5f',
@@ -243,22 +238,7 @@ const styles = StyleSheet.create({
     
     
   },
-  TextInput:{
-    marginTop: 5,
-    height:50,
-    width: '85%',
-    fontSize: 16,
-    fontFamily:'Poppins-Regular',
-    borderWidth: 1.5,
-   borderRadius: 18,
-    borderColor: "#224b5f",
-    backgroundColor:"#eee",
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"center",
-    color:"#22292F"
-    
-  },
+ 
   submit:{
     marginTop: 0.012*vh,
     height:0.065*vh,
@@ -269,26 +249,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent:"center",
     textAlign:"center",
-
-    
-   borderRadius: 18,    
-    backgroundColor:"#f44336",
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"center",
-    alignSelf: 'center',
-    
   },
-  button:{
-    marginTop: 10,
-    height:45,
-    width: '85%',
-    
-   borderRadius: 18,    
-    backgroundColor:"#f44336",
-    alignItems: "center",
-    justifyContent:"center",
-    textAlign:"center",
-    
-  }
+ 
 });

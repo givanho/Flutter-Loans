@@ -229,27 +229,7 @@ const runner = async () =>{
      
       
     },
-    textHeading:{
-      color:'#22292F',
-      fontSize: 19, 
-      narginBottom: 5,
-      fontFamily:'Poppins-SemiBold', 
-      paddingTop:10,
-      alignItems: 'center',
-      textAlign:'center'
-      
-    },
-    textParagraph:{
-      
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      
-      color:'#515151',
-      alignItems: 'center',
-      textAlign:'center',
-      paddingBottom: 10
-      
-    },
+    
     TextInput:{
       display: 'flex',
     flexDirection: 'row',

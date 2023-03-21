@@ -162,23 +162,7 @@ const styles = StyleSheet.create({
    
 
   },
-  svg:{
-   
-    height: 'auto',
-    width: 'auto',
-    
-    marginBottom: 15,
-  },
-  textHeading:{
-    color:'#22292F',
-    fontSize: 19, 
-    narginBottom: 5,
-    fontFamily:'Poppins-SemiBold', 
-    paddingTop:10,
-    alignItems: 'center',
-    textAlign:'center'
-    
-  },
+ 
   textParagraph:{
     fontSize: 15,
     fontFamily:'Poppins-Regular',
@@ -190,17 +174,7 @@ const styles = StyleSheet.create({
 
     
   },
-  success:{
-    
-    fontSize: 11,
-    fontFamily:'Poppins-Regular',
-    
-    color:'green',
-    alignItems: 'center',
-    textAlign:'center',
-    paddingBottom: 10
-    
-  },
+ 
   error:{
     
     fontSize: vw * 0.030,

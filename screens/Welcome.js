@@ -1,8 +1,6 @@
-import { StyleSheet, View, Text, Pressable , Linking, TextInput, ScrollView, TouchableOpacity, BackHandler,ImageBackground,
-  StatusBar, Alert, Image} from 'react-native'
+import { StyleSheet, View, Text, Pressable ,  ScrollView, TouchableOpacity, BackHandler,Image} from 'react-native'
 import React , {useEffect, useState} from 'react'
-import { getFirestore, collection,setDoc, addDoc, getDocs, 
-  doc, DocumentSnapshot, Firestore } from "firebase/firestore"; 
+import { collection, getDocs,  } from "firebase/firestore"; 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -23,7 +21,7 @@ const Welcome = ({navigation}) => {
                     '₦100,000 Loan successfully disbursed to (058*****)'];
   const { user, logout} = UserAuth();
   const [movies, setMovies] = useState([])
-  
+ 
   useEffect(() => {
     const backAction = async () => {
       try{
@@ -124,6 +122,7 @@ const Welcome = ({navigation}) => {
           style={{ width: vw * 0.15, height: vw * 0.15,opacity:0.07,position:'absolute',top:vh * 0.24,left:vw * 0.33}} />
 
 <View style={{flexDirection:'row', justifyContent:'space-between', width: '85%', alignItems:'center', alignSelf:'center'}}>
+
   <View>
       {  movies.map((movie,idx) =>(
         

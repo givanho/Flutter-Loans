@@ -1,18 +1,15 @@
-import { StyleSheet, View, Text, Pressable , Linking, TextInput, TouchableOpacity, BackHandler,
-    StatusBar, Alert, Image,SafeAreaView,Button,  ScrollView} from 'react-native'
+import { StyleSheet, View, Text,  TextInput, TouchableOpacity, BackHandler, ScrollView} from 'react-native'
 import React , {useEffect, useState} from 'react'
 import Slider from '@react-native-community/slider';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import Lottie from 'lottie-react-native';
-import { collection,setDoc, addDoc, getDoc, doc } from "firebase/firestore"; 
+import { setDoc, doc,getDoc } from "firebase/firestore"; 
 import { db } from '../firebase';
 import {UserAuth} from "../contest"
 import {bankapi} from "@env"
-
-
-
+import {vw, vh} from './MyDimensions'
 
 const banks=[
   {
@@ -1637,15 +1634,14 @@ const banks=[
 const Business = ({navigation}) => {
     const [range, setRange] = useState('');
     const [month, setMonth] = useState('');
-    const [duration, setDuration] = useState('');
+    const [interest, setInterest] = useState('');
     const [sliding, setSliding] = useState('');
 
     const [bvn, setBvn]= useState('');
    
-    const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
-  const { user, logout} = UserAuth();
+  const { user} = UserAuth();
 
   
 
@@ -1657,16 +1653,14 @@ const Business = ({navigation}) => {
     const [bank, setBank]= useState('');
     const [bvnerror, setBvnerror]= useState(null);
     const [error, setError]= useState(null);
-    const [error1, setError1]= useState(null);
-    const [contacts, setContacts] = useState(null);
-    const [loading, setLoading] = useState(false)
     // Define a state variable to control whether or not the components are rendered
   const [showComponents, setShowComponents] = useState(false);
 
   // Define a state variable to store the API response data
-  const [responseData, setResponseData] = useState('');
   const allInputsFilled = bvn !=='' && account !=='' && code !=='' && bank !== '' 
   && range !== '' && month !== '' 
+  
+
 
   useEffect(() => {
     const backAction = async () => {
@@ -1706,10 +1700,7 @@ const Business = ({navigation}) => {
        console.log("rear " + rear)
       }
       
-
-           console.log(dua)
-           setDuration(dua)
-           console.log('duration '+ duration)
+           setInterest(dua)
        } else{
            setBvnerror("Incorrect BVN")
        }
@@ -1727,49 +1718,50 @@ const Business = ({navigation}) => {
         }
       };
     try {
+        setIsLoading(true);
         const response = await axios(options);
         const raiden = response.data.data.account_name
         
         if(response.data.error){
+            setIsLoading(false)
             setError(response.data.error)
-
             throw new Error(`Error in response : ${response.data.error}`);
         }
         if(bvnerror){
+            setIsLoading(false)
             throw new Error('BVn Error : ');
         }
-        console.log(response.data.data)
-        console.log(response.data.data.account_name)
         
-
         setError(null);
-        console.log('contacts =>'+raiden)
-        
+       
+            await setDoc(doc(db, "loanDeal", user.email || user.phoneNumber), {
+                Bank: bank,
+                Account: account,
+                Contacts: raiden,
+                Amount: range,
+                Duration: month,
+                Interest: interest,
+                BVN: bvn,
+                FormattedDate: new Date().toLocaleDateString()
+          });
+            
         //Save a doc for users loan applications to firebase
-        await setDoc(doc(db, "loanDeal", user.email || user.phoneNumber), {
-            Bank: bank,
-            Account: account,
-             
-             Contacts: raiden,
-             Range: range,
-             Month: month,
-             Duration: duration
-       });
+        
 
        navigation.navigate("Summary", {
         bank,
         account,
-        
         raiden,
         range,
         month,
-        duration
+        interest, 
+        bvn
     })
 
 
 
       } catch (error) {
-        console.error(error.response.data.message);
+        setIsLoading(false);
         setError('Error: Check your Bank or Account number');
         return;
       }
@@ -1780,42 +1772,46 @@ const Business = ({navigation}) => {
     
   return (
    
-    <ScrollView contentContainerStyle={styles.contentContainer}>
+    <ScrollView contentContainerStyle={styles.contentContainer}
+    showsVerticalScrollIndicator={false}
+    >
     <View style={styles.container}>
+        
 
 
         <View style={{width:'85%',alignSelf:'center'}}>
                 <Text style={styles.textHeading}>
-                Loan Apply
+                Loan Application
                 </Text>
                  <Text style={{    fontFamily:'Poppins-Regular',
       
       color:'#515151',
       alignItems: 'center',
       textAlign:'center',
-      paddingBottom: 10, 
-      fontSize: 14,
+      paddingBottom: vh * 0.010, 
+      fontSize: vw * 0.040,
   }}>
+   
                 Apply and get a new Business Loan in less than 2 Hours
                 </Text>
 
                 <View>
+                   
                 <Text style={styles.textParagraph}>
                 Please select a loan ammount
                 </Text>
                 
                  </View>
 
-                <View style={{backgroundColor:'#eee', width:'100%', height:'14%',
-                              alignSelf:'center',borderWidth: 0.5,borderRadius: 20,
+                <View style={{backgroundColor:'#eee', width:'100%', height:vh * 0.15,
+                              alignSelf:'center',borderWidth: 1,borderRadius:  0.06 * vw,
                               borderColor: "#224b5f",}}>
                     <Text style={styles.amountHeading}> ₦{''}
                     <Text style={styles.amountHeading}> {range.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text> </Text>
                   
 
                     <Slider
-                        style={{width: 
-                          '90%', height: 30,   alignSelf:'center',
+                        style={{width: '90%', height: 0.05*vh,   alignSelf:'center', marginTop:-vh * 0.02
                           }}
                         minimumValue={100000}
                         maximumValue={5000000}
@@ -1823,19 +1819,20 @@ const Business = ({navigation}) => {
                         maximumTrackTintColor={'#f44336'}
                         value={100000}
                         step={200000}
-                        thumbImage={  require('../assets/circlewing.png' ) }
+                        thumbTintColor={'#224b5f'}
+                       
                         onValueChange={value => setRange(value)}
                         onSlidingStart={() => setSliding('sliding')}
                         onSlidingComplete={() => setSliding('Inactive')}
                       />
-                       <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', paddingTop:-35}}>
-                        <View><Text style={{ fontSize: 10,
+                       <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', marginTop:-vh * 0.01}}>
+                        <View><Text style={{ fontSize: 0.03 * vw,
                                     fontFamily:'Poppins-Regular',
-                                    color:'#224b5f',top:-8
+                                    color:'#224b5f'
                                     }}>MIN</Text></View>
-                        <View><Text style={{ fontSize: 10,
+                        <View><Text style={{ fontSize:  0.03 * vw,
                                     fontFamily:'Poppins-Regular',
-                                    color:'#224b5f',top:-8
+                                    color:'#224b5f'
                                     }}>MAX</Text></View></View>
                 </View>
                 
@@ -1846,8 +1843,9 @@ const Business = ({navigation}) => {
                         
                 </View>
 
-                <View style={{backgroundColor:'#eee', width:'100%', height:'14%',alignSelf:'center',
-                      borderWidth: 1,borderRadius: 20,borderColor: "#224b5f"}}>
+                <View style={{backgroundColor:'#eee', width:'100%', height:vh * 0.15,
+                              alignSelf:'center',borderWidth: 1,borderRadius:  0.06 * vw,
+                              borderColor: "#224b5f",}}>
                     
                     <Text style={styles.amountHeading}> {month} {' '}
         <Text>
@@ -1856,8 +1854,7 @@ const Business = ({navigation}) => {
                   
 
                     <Slider
-                        style={{width:'90%', height: 30,   alignSelf:'center'
-                          }}
+                        style={{width: '90%', height: 0.05*vh,   alignSelf:'center', marginTop:-vh * 0.02}}
                         minimumValue={3}
                         maximumValue={18}
                         minimumTrackTintColor={'#224b5f'}
@@ -1865,35 +1862,32 @@ const Business = ({navigation}) => {
                        
                         value={3}
                         step={3}
-                        thumbImage={  require('../assets/circlewing.png' ) }
+                        thumbTintColor={'#224b5f'}
                         onValueChange={value => setMonth(value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','))}
                         
                         onSlidingStart={() => setSliding('sliding')}
                         onSlidingComplete={() => setSliding('Inactive')}
                       />
-                      <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', paddingTop:-35}}>
-                        <View><Text style={{ fontSize: 10,
+                       <View style={{flexDirection:'row', justifyContent:'space-between', width:'80%', alignSelf:'center', marginTop:-vh * 0.01}}>
+                        <View><Text style={{ fontSize: 0.03 * vw,
                                     fontFamily:'Poppins-Regular',
-                                    color:'#224b5f',
-                                    top:-8
+                                    color:'#224b5f'
                                     }}>MIN</Text></View>
-                        <View><Text style={{ fontSize: 10,
+                        <View><Text style={{ fontSize:  0.03 * vw,
                                     fontFamily:'Poppins-Regular',
-                                    top:-8,
-                                    color:'#224b5f',
+                                    color:'#224b5f'
                                     }}>MAX</Text></View></View>
-                      
-                   </View>
+                </View>
                    <View>
                 <Text style={styles.textParagraph}>
                 Please Input your BVN
                 </Text>
                 <TextInput style={{width: '100%',
-                                    height:40,
-                                    fontSize: 15,
+                                    height:vh * 0.06,
+                                    fontSize: vw * 0.042,
                                     fontFamily:'Poppins-Regular',
                                     borderWidth: 1,
-                                    borderRadius: 10,
+                                    borderRadius: vw * 0.03,
                                     borderColor: "#224b5f",
                                     backgroundColor:"#eee",
                                     alignItems: "center",
@@ -1909,7 +1903,7 @@ const Business = ({navigation}) => {
     onChangeText={(text) => setBvn(text)} >
         
     </TextInput>
-    <View><Text style={{fontSize: 12,
+    <View><Text style={{fontSize: vw*0.030,
                       color:"#F44336",
                       fontFamily:'Poppins-Regular',}}>{bvnerror}</Text>
 </View>
@@ -1918,12 +1912,7 @@ const Business = ({navigation}) => {
                 <Text style={styles.textParagraph}>
                 Please select your Bank
                 </Text>
-                <View style={{backgroundColor:"#eee",
-                              borderWidth: 1,
-                              borderRadius: 10,
-                              borderColor: "#224b5f",
-                              backgroundColor:"#eee",
-                              height:40,}}>
+                
                 <Dropdown
           style={[styles.dropdown, isFocus && { borderColor: '#37474F' }]}
           placeholderStyle={styles.placeholderStyle}
@@ -1931,7 +1920,7 @@ const Business = ({navigation}) => {
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
           data={banks}
-          search
+          search={styles.inputSearchStyle}
           maxHeight={300}
           fontFamily="Poppins-Regular"
           labelField= "name"
@@ -1952,7 +1941,7 @@ const Business = ({navigation}) => {
               style={styles.icon}
               color={isFocus ? '#37474F' : '#224b5f'}
               name="Safety"
-              size={20}
+              size={vw *0.06}
             />
           )}
         />
@@ -1962,7 +1951,7 @@ const Business = ({navigation}) => {
 
     </View>
                   
-                  </View>
+                  
 
 
                   
@@ -1971,11 +1960,11 @@ const Business = ({navigation}) => {
                 Please input your account number
                 </Text>
                 <TextInput style={{width: '100%',
-                                    height:40,
-                                    fontSize: 15,
+                                    height:vh * 0.06,
+                                    fontSize: vw * 0.042,
                                     fontFamily:'Poppins-Regular',
                                     borderWidth: 1,
-                                    borderRadius: 10,
+                                    borderRadius: vw * 0.03,
                                     borderColor: "#224b5f",
                                     backgroundColor:"#eee",
                                     alignItems: "center",
@@ -1995,7 +1984,7 @@ const Business = ({navigation}) => {
     </TextInput>
     
                   </View>
-                  <View>{error && <Text style={{fontSize: 12,
+                  <View>{error && <Text style={{fontSize: vw * 0.030,
                                         color:"#F44336",
                                         fontFamily:'Poppins-Regular',}}>{error}</Text>}</View>
                   <View>
@@ -2004,7 +1993,7 @@ const Business = ({navigation}) => {
         
   onPress={handlePress}>
      {!isLoading ? (
-          <Text style={{fontSize: 16,
+          <Text style={{fontSize: vw * 0.045,
     color:"#FFF",
     fontFamily:'Poppins-SemiBold',}}>  Submit </Text>
         ):(
@@ -2023,24 +2012,6 @@ const Business = ({navigation}) => {
                   
                  
         </View>
-
-       
-        
-        
-
-        
-
-  
-
-
-
-
-
-
-
-   
-
-
         </View>
     
     </ScrollView>
@@ -2059,191 +2030,108 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       heght: "100%",
      
+    }, 
+    selectedTextStyle:{
+        color:'#000',
+        left:15,
+        fontSize:vw * 0.042
+    },
+    inputSearchStyle:{
+        
+      backgroundColor: '#eee',
+      borderRadius: vw * 0.030,    
+
+    },
+
+    placeholderStyle:{
+        color:'#686868',
+        left:15,
+        fontSize:vw * 0.042
+    },
+    dropdown:{
+
+        height:vh * 0.06,
+        borderWidth: 1,
+        borderRadius: vw * 0.03,
+        borderColor: "#224b5f",
+        backgroundColor:"#eee",
+        alignItems: "center",
+        justifyContent:"center",
+                                    
+    },
+    iconStyle:{
+        width: 0.04*vh,
+        height:0.04*vh,
     },
     contentContainer: {
-      paddingVertical: 40
+      paddingVertical: 0.05*vh
     },
-    submit:{
-      marginTop: 20,
-      height:45,
-      width: '100%',
-      
-     borderRadius: 15,    
-      backgroundColor:"#f44336",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-      
-    },disablebutton:{
-        marginTop: 40,
-        height:45,
+    disablebutton:{
+        marginTop: 0.012*vh,
+        height:0.065*vh,
         width: '100%',
         
-       borderRadius: 15,    
+       borderRadius: vw * 0.04,    
         backgroundColor:"gray",
         alignItems: "center",
         justifyContent:"center",
         textAlign:"center",
         
       },
-    upper:{
-     
-      backgroundColor: '#224b5f',
-      borderBottomEndRadius: 70,
-      borderBottomStartRadius: 70,
-      width: '100%',
-      height: '30%',
-      position:'absolute',
-      top:0,
-    },
-    TextInput:{
-      marginTop: 11,
-      height:40,
-     width: '85%',
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      borderWidth: 1.5,
-     borderRadius: 10,
-      borderColor: "#224b5f",
-      backgroundColor:"#eee",
-     
-      
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"left",
-      paddingLeft: 20,
-      
-      
+    submit:{
+        marginTop: 0.012*vh,
+    height:0.065*vh,
+    width: '100%',
+    
+   borderRadius: vw * 0.04,    
+    backgroundColor:"#f44336",
+    alignItems: "center",
+    justifyContent:"center",
+    textAlign:"center",
+    
     },
     button:{
-      marginTop: 40,
-      height:45,
-      marginBottom:20,
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#37474F",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-     
-    },
-    buttoon:{
-      marginTop: 40,
-      height:45,
-      marginBottom:20,
-     borderBottomLeftRadius: 18,    
-     borderBottomRightRadius: 18,    
-      backgroundColor:"#FF725E",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
+        marginTop: 0.08*vh,
+        height:0.065*vh,
+        width: '100%',
+        
+       borderRadius: vw * 0.04,    
+        backgroundColor:"#f44336",
+        alignItems: "center",
+        justifyContent:"center",
+        textAlign:"center",
+        
       
-    },
-    buttonTxt:{
-      fontSize: 15,
-      fontFamily:'Poppins-Regular',
-      
-    },
-    logout:{
-     width:"85%",
-     alignItems: "center",
-      flexDirection: 'row',
-      justifyContent: 'space-between'
      
     },
-    flex:{
-      flexDirection: 'row',
-                alignItems: 'center',  marginTop: 5,
-                height:40,
-                width: 165,
-                backgroundColor:"#eee",
-                fontSize: 14,
-                borderWidth: 1,
-               borderRadius: 12,
-               borderColor: "#224b5f",
-                color: "#fff" 
-    },
-    radio: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-     
-      alignContent:'center',
-      alignItems: 'center'
-   },
-    img: {
-      height: 22, 
-      width: 22,
-      marginHorizontal: 5,
-    },
-    btn: {
-     
-      height:35,
-      width: 80,
-      borderWidth: 1.5,
-     borderRadius: 10,
-      borderColor: "#f44336",
-      backgroundColor:"#eee",
-      alignItems: "center",
-      justifyContent:"center",
-      textAlign:"center",
-    },
-    
-    
-    
+   
    amountHeading:{
         color:'#22292F',
-        fontSize: 29, 
-        narginBottom: 5,
+        fontSize: vw * 0.085, 
         fontFamily:'Poppins-SemiBold', 
-        paddingTop:10,
+        paddingTop:5,
         alignItems: 'center',
         textAlign:'center'
         
       },
     textHeading:{
       color:'#22292F',
-      fontSize: 19, 
-      narginBottom: 5,
+      fontSize: vw * 0.055, 
       fontFamily:'Poppins-SemiBold', 
-      paddingTop:10,
+      paddingTop:vh * 0.020,
       alignItems: 'center',
       textAlign:'center'
       
     },
     textParagraph:{
-      
-     
       fontFamily:'Poppins-Regular',
-      
       color:'#515151',
       alignItems: 'center',
-      textAlign:'center',
-      marginTop:15,
-      fontSize: 18,
+      textAlign:'left',
+      marginTop:vh * 0.025,
+      marginBottom:-vh * 0.008,
+      fontSize: vw * 0.042,
       
     },
-  
-      card:{
-        flexDirection:'row',
-        justifyContent: 'space-between',
-        width:'85%'
-      },
-      bus:{
-        borderColor: '#ccc',
-        width:'46%',
-        backgroundColor: '#eee',
-        borderWidth: 0.5,
-        borderRadius: 18,
-      },
-      per:{
-        
-        width:'46%',
-        backgroundColor: '#222',
-        borderColor: '#bbb',
-  
-        borderWidth: 0.5,
-        borderRadius: 18,
-      },
-  
   
     });
