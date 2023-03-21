@@ -1,5 +1,5 @@
-import { StyleSheet, View,Easing, Animated,Text, Pressable , Linking, TextInput,
-  Platform, StatusBar, Image, ScrollView,KeyboardAvoidingView, TouchableOpacity, ActivityIndicator,TouchableWithoutFeedback} from 'react-native'
+import { StyleSheet, View,Text, Pressable , TextInput,
+   Image, ScrollView,TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -50,7 +50,7 @@ const Home = ({ navigation }) => {
   }
   onLayoutRootView()
  const justclick = async () => {
-  navigation.navigate("Details");
+  navigation.navigate("Disbursed");
  }
 
    const handleSubmit = async (e) => {
